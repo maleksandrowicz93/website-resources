@@ -3,6 +3,9 @@ package com.github.maleksandrowicz93.websiteresources.enums;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+/**
+ * This enum represents communicates for successful api responses.
+ */
 @Getter
 @RequiredArgsConstructor
 public enum ResponseMessage {

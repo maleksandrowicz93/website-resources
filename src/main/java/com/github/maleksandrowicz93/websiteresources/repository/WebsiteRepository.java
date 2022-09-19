@@ -6,6 +6,9 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
+/**
+ * This class represents repository storing {@link Website}.
+ */
 @Repository
 public interface WebsiteRepository extends JpaRepository<Website, Long> {
 

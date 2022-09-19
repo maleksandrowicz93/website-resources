@@ -3,6 +3,9 @@ package com.github.maleksandrowicz93.websiteresources.exception;
 import com.github.maleksandrowicz93.websiteresources.enums.ErrorCode;
 import lombok.Getter;
 
+/**
+ * This class represents parent of application Exception hierarchy.
+ */
 @Getter
 public abstract class WebsiteResourcesException extends Exception {
 

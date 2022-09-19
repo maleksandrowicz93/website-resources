@@ -5,7 +5,6 @@ import com.github.maleksandrowicz93.websiteresources.dto.ResponseDto;
 import com.github.maleksandrowicz93.websiteresources.dto.WebsiteDto;
 import com.github.maleksandrowicz93.websiteresources.entity.Website;
 import com.github.maleksandrowicz93.websiteresources.enums.ResponseMessage;
-import com.github.maleksandrowicz93.websiteresources.exception.MalformedUrlException;
 import com.github.maleksandrowicz93.websiteresources.exception.WebsiteAlreadyExistsException;
 import com.github.maleksandrowicz93.websiteresources.exception.WebsiteNotFoundException;
 import com.github.maleksandrowicz93.websiteresources.service.WebsiteService;
@@ -26,7 +25,7 @@ public class WebsiteControllerApiImpl implements WebsiteApi {
     private final WebsiteService websiteService;
 
     @Override
-    @SneakyThrows({WebsiteAlreadyExistsException.class, MalformedUrlException.class})
+    @SneakyThrows(WebsiteAlreadyExistsException.class)
     public ResponseEntity<ResponseDto> downloadWebsite(@RequestBody String url) {
         websiteService.downloadWebsite(url);
         return buildResponseFrom(ResponseMessage.WEBSITE_DOWNLOADING_STARTED);

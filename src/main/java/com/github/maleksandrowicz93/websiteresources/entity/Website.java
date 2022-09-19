@@ -7,6 +7,9 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
+/**
+ * This class represents entity of stored website.
+ */
 @Entity
 @Data
 @Builder
