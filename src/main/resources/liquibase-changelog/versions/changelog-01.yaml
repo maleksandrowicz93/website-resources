@@ -1,0 +1,26 @@
+databaseChangeLog:
+  - changeSet:
+      id: 0
+      author: maleksandrowicz93
+      changes:
+        - createTable:
+            tableName: website
+            columns:
+              - column:
+                  autoIncrement: true
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_website_id
+                  name: id
+                  type: int
+              - column:
+                  name: url
+                  type: varchar
+                  constraints:
+                    unique: true
+                    nullable: false
+                    uniqueConstraintName: unique_website_url
+              - column:
+                  name: html
+                  type: varchar
