@@ -2,11 +2,13 @@ package com.github.maleksandrowicz93.websiteresources.service;
 
 import com.github.maleksandrowicz93.websiteresources.cache.UrlCache;
 import com.github.maleksandrowicz93.websiteresources.entity.Website;
+import com.github.maleksandrowicz93.websiteresources.exception.InvalidUrlException;
 import com.github.maleksandrowicz93.websiteresources.exception.WebsiteAlreadyExistsException;
 import com.github.maleksandrowicz93.websiteresources.exception.WebsiteNotFoundException;
 import com.github.maleksandrowicz93.websiteresources.repository.WebsiteRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.apache.commons.validator.routines.UrlValidator;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -28,7 +30,12 @@ public class WebsiteService {
      * @param url - String url of website to be downloaded
      * @throws WebsiteAlreadyExistsException when try to download already downloaded website
      */
-    public void downloadWebsite(String url) throws WebsiteAlreadyExistsException {
+    public void downloadWebsite(String url) throws WebsiteAlreadyExistsException, InvalidUrlException {
+        UrlValidator urlValidator = UrlValidator.getInstance();
+        boolean isUrlValid = urlValidator.isValid(url);
+        if (!isUrlValid) {
+            throw new InvalidUrlException();
+        }
         if (urlCache.contains(url) || websiteRepository.existsByUrl(url)) {
             throw new WebsiteAlreadyExistsException();
         }

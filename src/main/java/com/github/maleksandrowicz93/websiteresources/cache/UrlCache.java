@@ -8,6 +8,7 @@ import java.util.Set;
 
 /**
  * This class represents cache for url of downloaded websites.
+ * Cache stores urls during downloading time.
  */
 @Component
 @RequiredArgsConstructor
