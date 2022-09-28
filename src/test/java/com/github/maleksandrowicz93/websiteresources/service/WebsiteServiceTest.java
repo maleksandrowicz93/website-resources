@@ -6,6 +6,7 @@ import com.github.maleksandrowicz93.websiteresources.exception.InvalidUrlExcepti
 import com.github.maleksandrowicz93.websiteresources.exception.WebsiteAlreadyExistsException;
 import com.github.maleksandrowicz93.websiteresources.exception.WebsiteNotFoundException;
 import com.github.maleksandrowicz93.websiteresources.repository.WebsiteRepository;
+import com.github.maleksandrowicz93.websiteresources.utils.WebsiteTestUtils;
 import org.apache.commons.validator.routines.UrlValidator;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -22,11 +23,14 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+/**
+ * This class tests {@link WebsiteService} public methods.
+ */
 @SpringBootTest
 class WebsiteServiceTest {
 
-    private static final String URL = "http://test.com";
-    private static final long ID = 1;
+    private static final String URL = WebsiteTestUtils.URL;
+    private static final long ID = WebsiteTestUtils.ID;
 
     private final MockedStatic<UrlValidator> urlValidatorMockedStatic = mockStatic(UrlValidator.class);
 
@@ -125,7 +129,7 @@ class WebsiteServiceTest {
     @DisplayName("Should get all websites")
     void shouldGetAllWebsites() {
         //given
-        Website website = buildWebsite();
+        Website website = WebsiteTestUtils.buildWebsite();
         List<Website> expectedWebsites = Collections.singletonList(website);
         when(websiteRepository.findAll()).thenReturn(expectedWebsites);
 
@@ -137,19 +141,11 @@ class WebsiteServiceTest {
         assertEquals(expectedWebsites, actualWebsites);
     }
 
-    private Website buildWebsite() {
-        return Website.builder()
-                .id(ID)
-                .url(URL)
-                .html("<html>")
-                .build();
-    }
-
     @Test
     @DisplayName("Should get website")
     void shouldGetWebsite() throws WebsiteNotFoundException {
         //given
-        Website website = buildWebsite();
+        Website website = WebsiteTestUtils.buildWebsite();
         when(websiteRepository.findById(anyLong())).thenReturn(Optional.of(website));
 
         //when

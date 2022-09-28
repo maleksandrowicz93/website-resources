@@ -3,6 +3,8 @@ package com.github.maleksandrowicz93.websiteresources.service;
 import com.github.maleksandrowicz93.websiteresources.cache.UrlCache;
 import com.github.maleksandrowicz93.websiteresources.entity.Website;
 import com.github.maleksandrowicz93.websiteresources.repository.WebsiteRepository;
+import com.github.maleksandrowicz93.websiteresources.utils.InputStreamProvider;
+import com.github.maleksandrowicz93.websiteresources.utils.InputStreamReaderProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.IOUtils;
@@ -32,8 +34,8 @@ public class DownloadService {
     @Async
     public void downloadWebsite(String url) {
         urlCache.put(url);
-        try (InputStream inputStream = new URL(url).openStream()) {
-            InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+        try (InputStream inputStream = InputStreamProvider.from(url)) {
+            InputStreamReader inputStreamReader = InputStreamReaderProvider.from(inputStream);
             String html = IOUtils.toString(inputStreamReader);
             Website website = Website.builder()
                     .url(url)
