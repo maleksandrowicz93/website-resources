@@ -1,17 +1,17 @@
 package com.github.maleksandrowicz93.websiteresources.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 /**
  * This class represents entity of stored website.
  */
 @Entity
-@Data
+@Getter
+@Setter
+@ToString
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -19,8 +19,23 @@ public class Website {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
     @Column(unique = true, nullable = false)
     private String url;
     private String html;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Website website)) return false;
+        return id != null
+                && Objects.equals(id, website.id)
+                && Objects.equals(url, website.url)
+                && Objects.equals(html, website.html);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(url, html);
+    }
 }
