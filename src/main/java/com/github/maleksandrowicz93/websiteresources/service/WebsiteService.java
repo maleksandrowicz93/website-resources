@@ -31,14 +31,18 @@ public class WebsiteService {
      * @throws WebsiteAlreadyExistsException when try to download already downloaded website
      */
     public void downloadWebsite(String url) throws WebsiteAlreadyExistsException, InvalidUrlException {
+        log.info("Started downloading website from url: {}", url);
+        log.info("Checking URL correctness");
         UrlValidator urlValidator = UrlValidator.getInstance();
         boolean isUrlValid = urlValidator.isValid(url);
         if (!isUrlValid) {
             throw new InvalidUrlException();
         }
+        log.info("Checking if website is already downloaded");
         if (urlCache.contains(url) || websiteRepository.existsByUrl(url)) {
             throw new WebsiteAlreadyExistsException();
         }
+        log.info("Trigger download website job");
         downloadService.downloadWebsite(url);
     }
 
@@ -47,6 +51,7 @@ public class WebsiteService {
      * @return List of all stored {@link Website} instances
      */
     public List<Website> getAllWebsites() {
+        log.info("Fetching all websites");
         return websiteRepository.findAll();
     }
 
@@ -57,6 +62,7 @@ public class WebsiteService {
      * @throws WebsiteNotFoundException when {@link Website} with given id is not stored
      */
     public String getWebsite(long id) throws WebsiteNotFoundException {
+        log.info("Fetching a downloaded website with id: {}", id);
         return websiteRepository.findById(id)
                 .map(Website::getHtml)
                 .orElseThrow(WebsiteNotFoundException::new);
@@ -68,6 +74,7 @@ public class WebsiteService {
      * @throws WebsiteNotFoundException when {@link Website} with given id is not stored
      */
     public void deleteWebsite(long id) throws WebsiteNotFoundException {
+        log.info("Deleting a downloaded website with id: {}", id);
         if (!websiteRepository.existsById(id)) {
             throw new WebsiteNotFoundException();
         }

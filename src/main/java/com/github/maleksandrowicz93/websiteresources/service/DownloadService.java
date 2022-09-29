@@ -33,7 +33,10 @@ public class DownloadService {
      */
     @Async
     public void downloadWebsite(String url) {
+        log.info("Download website job started for url: {}", url);
+        log.info("Putting url into temporary cache");
         urlCache.put(url);
+        log.info("Getting html code from url");
         try (InputStream inputStream = InputStreamProvider.from(url)) {
             InputStreamReader inputStreamReader = InputStreamReaderProvider.from(inputStream);
             String html = IOUtils.toString(inputStreamReader);
@@ -41,10 +44,12 @@ public class DownloadService {
                     .url(url)
                     .html(html)
                     .build();
+            log.info("Saving website into database");
             websiteRepository.save(website);
         } catch (IOException e) {
             log.error(e.getMessage());
         } finally {
+            log.info("Deleting url from temporary cache");
             urlCache.delete(url);
         }
     }
