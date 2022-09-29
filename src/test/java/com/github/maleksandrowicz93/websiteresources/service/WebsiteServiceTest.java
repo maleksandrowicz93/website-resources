@@ -2,6 +2,7 @@ package com.github.maleksandrowicz93.websiteresources.service;
 
 import com.github.maleksandrowicz93.websiteresources.cache.UrlCache;
 import com.github.maleksandrowicz93.websiteresources.entity.Website;
+import com.github.maleksandrowicz93.websiteresources.enums.KafkaTopic;
 import com.github.maleksandrowicz93.websiteresources.exception.InvalidUrlException;
 import com.github.maleksandrowicz93.websiteresources.exception.WebsiteAlreadyExistsException;
 import com.github.maleksandrowicz93.websiteresources.exception.WebsiteNotFoundException;
@@ -15,6 +16,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.kafka.core.KafkaTemplate;
 
 import java.util.Collections;
 import java.util.List;
@@ -40,12 +42,14 @@ class WebsiteServiceTest {
     private WebsiteRepository websiteRepository;
     @MockBean
     private UrlCache urlCache;
+    @MockBean
+    private KafkaTemplate<String, String> kafkaTemplate;
 
     private WebsiteService websiteService;
 
     @BeforeEach
     void setup() {
-        websiteService = new WebsiteService(downloadService, websiteRepository, urlCache);
+        websiteService = new WebsiteService(downloadService, websiteRepository, urlCache, kafkaTemplate);
     }
 
     @AfterEach
@@ -66,7 +70,7 @@ class WebsiteServiceTest {
         websiteService.downloadWebsite(URL);
 
         //then
-        verify(downloadService).downloadWebsite(URL);
+        verify(kafkaTemplate).send(KafkaTopic.WEBSITE_DOWNLOAD.getText(), URL);
     }
 
     private void mockCheckingUrlBehavior() {

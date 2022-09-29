@@ -1,3 +1,5 @@
+kafka:
+  bootstrapAddress: http://localhost:9092
 server:
   port: 9000
   servlet:

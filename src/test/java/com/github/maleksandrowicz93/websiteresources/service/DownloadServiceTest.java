@@ -2,6 +2,7 @@ package com.github.maleksandrowicz93.websiteresources.service;
 
 import com.github.maleksandrowicz93.websiteresources.cache.UrlCache;
 import com.github.maleksandrowicz93.websiteresources.entity.Website;
+import com.github.maleksandrowicz93.websiteresources.enums.KafkaTopic;
 import com.github.maleksandrowicz93.websiteresources.repository.WebsiteRepository;
 import com.github.maleksandrowicz93.websiteresources.utils.InputStreamProvider;
 import com.github.maleksandrowicz93.websiteresources.utils.InputStreamReaderProvider;
@@ -15,6 +16,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.MockedStatic;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.kafka.core.KafkaTemplate;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -42,12 +44,14 @@ class DownloadServiceTest {
     private WebsiteRepository websiteRepository;
     @MockBean
     private UrlCache urlCache;
+    @MockBean
+    private KafkaTemplate<String, String> kafkaTemplate;
 
     private DownloadService downloadService;
 
     @BeforeEach
     void setup() {
-        downloadService = new DownloadService(websiteRepository, urlCache);
+        downloadService = new DownloadService(websiteRepository, urlCache, kafkaTemplate);
     }
 
     @AfterEach
@@ -86,6 +90,7 @@ class DownloadServiceTest {
         //then
         verify(urlCache).put(URL);
         verify(websiteRepository).save(any(Website.class));
+        verify(kafkaTemplate).send(eq(KafkaTopic.NOTIFICATION.getText()), anyString());
         verify(urlCache).delete(URL);
 
         assertEquals(expectedWebsite, websiteArgumentCaptor.getValue());
@@ -106,6 +111,7 @@ class DownloadServiceTest {
         //then
         verify(urlCache).put(URL);
         verify(websiteRepository, times(0)).save(any(Website.class));
+        verify(kafkaTemplate).send(eq(KafkaTopic.NOTIFICATION.getText()), anyString());
         verify(urlCache).delete(URL);
     }
 }
