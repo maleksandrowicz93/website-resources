@@ -2,7 +2,7 @@ openapi: 3.0.3
 info:
   title: Website Downloader Server - OpenAPI 3.0
   description: This is a Website Downloader Server API based on the OpenAPI 3.0 specification.
-  termsOfService: https://www.backbase.com
+  termsOfService: https://bluemedia.pl
   contact:
     name: Contact the Developer
     url: https://www.linkedin.com/in/mateusz-aleksandrowicz/
@@ -32,7 +32,7 @@ paths:
           application/json:
             schema:
               type: string
-              example: https://www.backbase.com
+              example: https://bluemedia.pl
         required: true
       responses:
         '200':
@@ -116,7 +116,7 @@ components:
           example: 10
         url:
           type: string
-          example: https://www.backbase.com
+          example: https://bluemedia.pl
     Response:
       description: Model represents a response for successful operation
       type: object
