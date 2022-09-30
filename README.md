@@ -16,4 +16,5 @@ Cache for temporary stored urls (while website is being downloaded) needs to hav
 **Project Roadmap**
  - add integration tests
  - add security
- - ad profiles to differ production and developer db configuration
+ - add profiles to differ production and developer db configuration
+ - decoupling application into 2 separate microservices
