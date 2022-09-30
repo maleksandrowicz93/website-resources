@@ -1,6 +1,5 @@
 package com.github.maleksandrowicz93.websiteresources.service;
 
-import com.github.maleksandrowicz93.websiteresources.cache.UrlCache;
 import com.github.maleksandrowicz93.websiteresources.entity.Website;
 import com.github.maleksandrowicz93.websiteresources.enums.KafkaTopic;
 import com.github.maleksandrowicz93.websiteresources.exception.InvalidUrlException;
@@ -8,6 +7,7 @@ import com.github.maleksandrowicz93.websiteresources.exception.WebsiteAlreadyExi
 import com.github.maleksandrowicz93.websiteresources.exception.WebsiteNotFoundException;
 import com.github.maleksandrowicz93.websiteresources.repository.WebsiteRepository;
 import com.github.maleksandrowicz93.websiteresources.utils.WebsiteTestUtils;
+import com.hazelcast.collection.ISet;
 import org.apache.commons.validator.routines.UrlValidator;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -41,7 +41,7 @@ class WebsiteServiceTest {
     @MockBean
     private WebsiteRepository websiteRepository;
     @MockBean
-    private UrlCache urlCache;
+    private ISet<String> urlCache;
     @MockBean
     private KafkaTemplate<String, String> kafkaTemplate;
 

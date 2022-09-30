@@ -1,6 +1,5 @@
 package com.github.maleksandrowicz93.websiteresources.service;
 
-import com.github.maleksandrowicz93.websiteresources.cache.UrlCache;
 import com.github.maleksandrowicz93.websiteresources.entity.Website;
 import com.github.maleksandrowicz93.websiteresources.enums.KafkaTopic;
 import com.github.maleksandrowicz93.websiteresources.repository.WebsiteRepository;
@@ -8,6 +7,7 @@ import com.github.maleksandrowicz93.websiteresources.utils.InputStreamProvider;
 import com.github.maleksandrowicz93.websiteresources.utils.InputStreamReaderProvider;
 import com.github.maleksandrowicz93.websiteresources.utils.WebsiteTestUtils;
 import com.google.gson.Gson;
+import com.hazelcast.collection.ISet;
 import org.apache.commons.io.IOUtils;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -45,7 +45,7 @@ class DownloadServiceTest {
     @MockBean
     private WebsiteRepository websiteRepository;
     @MockBean
-    private UrlCache urlCache;
+    private ISet<String> urlCache;
     @MockBean
     private KafkaTemplate<String, String> kafkaTemplate;
     @SpyBean
@@ -70,7 +70,7 @@ class DownloadServiceTest {
     void shouldDownloadWebsite() {
         //given
         Website expectedWebsite = WebsiteTestUtils.buildWebsite();
-        doNothing().when(urlCache).put(anyString());
+        when(urlCache.add(anyString())).thenReturn(true);
         InputStream inputStream = mock(InputStream.class);
         inputStreamProviderMockedStatic.when(() -> InputStreamProvider.from(anyString())).thenReturn(inputStream);
         InputStreamReader inputStreamReader = mock(InputStreamReader.class);
@@ -86,16 +86,16 @@ class DownloadServiceTest {
             website.setId(ID);
             return website;
         });
-        doNothing().when(urlCache).delete(anyString());
+        when(urlCache.remove(anyString())).thenReturn(true);
 
         //when
         downloadService.downloadWebsite(URL);
 
         //then
-        verify(urlCache).put(URL);
+        verify(urlCache).add(URL);
         verify(websiteRepository).save(any(Website.class));
         verify(kafkaTemplate).send(eq(KafkaTopic.NOTIFICATION.getText()), anyString());
-        verify(urlCache).delete(URL);
+        verify(urlCache).remove(URL);
 
         assertEquals(expectedWebsite, websiteArgumentCaptor.getValue());
     }
@@ -104,18 +104,18 @@ class DownloadServiceTest {
     @DisplayName("Should download website when malformed URL")
     void shouldNotDownloadWebsiteWhenMalformedUrl() {
         //given
-        doNothing().when(urlCache).put(anyString());
+        when(urlCache.add(anyString())).thenReturn(true);
         inputStreamProviderMockedStatic.when(() -> InputStreamProvider.from(anyString()))
                 .thenThrow(MalformedURLException.class);
-        doNothing().when(urlCache).delete(anyString());
+        when(urlCache.remove(anyString())).thenReturn(true);
 
         //when
         downloadService.downloadWebsite(URL);
 
         //then
-        verify(urlCache).put(URL);
+        verify(urlCache).add(URL);
         verify(websiteRepository, times(0)).save(any(Website.class));
         verify(kafkaTemplate).send(eq(KafkaTopic.NOTIFICATION.getText()), anyString());
-        verify(urlCache).delete(URL);
+        verify(urlCache).remove(URL);
     }
 }

@@ -1,12 +1,12 @@
 package com.github.maleksandrowicz93.websiteresources.service;
 
-import com.github.maleksandrowicz93.websiteresources.cache.UrlCache;
 import com.github.maleksandrowicz93.websiteresources.entity.Website;
 import com.github.maleksandrowicz93.websiteresources.enums.KafkaTopic;
 import com.github.maleksandrowicz93.websiteresources.exception.InvalidUrlException;
 import com.github.maleksandrowicz93.websiteresources.exception.WebsiteAlreadyExistsException;
 import com.github.maleksandrowicz93.websiteresources.exception.WebsiteNotFoundException;
 import com.github.maleksandrowicz93.websiteresources.repository.WebsiteRepository;
+import com.hazelcast.collection.ISet;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.validator.routines.UrlValidator;
@@ -25,7 +25,7 @@ public class WebsiteService {
 
     private final DownloadService downloadService;
     private final WebsiteRepository websiteRepository;
-    private final UrlCache urlCache;
+    private final ISet<String> urlCache;
     private final KafkaTemplate<String, String> kafkaTemplate;
 
     /**
