@@ -12,6 +12,9 @@ import org.springframework.kafka.core.ProducerFactory;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * This class stores configuration of Kafka producer.
+ */
 @Configuration
 public class KafkaProducerConfig {
 

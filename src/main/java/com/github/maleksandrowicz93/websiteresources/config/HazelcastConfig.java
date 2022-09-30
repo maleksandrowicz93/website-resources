@@ -6,6 +6,9 @@ import com.hazelcast.core.HazelcastInstance;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * This class stores configuration of Hazelcast.
+ */
 @Configuration
 public class HazelcastConfig {
 

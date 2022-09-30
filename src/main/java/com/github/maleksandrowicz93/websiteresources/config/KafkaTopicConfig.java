@@ -11,6 +11,9 @@ import org.springframework.kafka.core.KafkaAdmin;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * This class stores configuration of Kafka topic.
+ */
 @Configuration
 public class KafkaTopicConfig {
 
