@@ -9,6 +9,7 @@ import com.github.maleksandrowicz93.websiteresources.exception.InvalidUrlExcepti
 import com.github.maleksandrowicz93.websiteresources.exception.WebsiteAlreadyExistsException;
 import com.github.maleksandrowicz93.websiteresources.exception.WebsiteNotFoundException;
 import com.github.maleksandrowicz93.websiteresources.service.WebsiteService;
+import com.github.maleksandrowicz93.websiteresources.utils.ResponseFactory;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.http.ResponseEntity;
@@ -29,15 +30,7 @@ public class WebsiteControllerApiImpl implements WebsiteApi {
     @SneakyThrows({WebsiteAlreadyExistsException.class, InvalidUrlException.class})
     public ResponseEntity<ResponseDto> downloadWebsite(@RequestBody String url) {
         websiteService.downloadWebsite(url);
-        return buildResponseFrom(ResponseMessage.WEBSITE_DOWNLOADING_STARTED);
-    }
-
-    private ResponseEntity<ResponseDto> buildResponseFrom(ResponseMessage responseMessage) {
-        ResponseDto responseDto = ResponseDto.builder()
-                .code(responseMessage.getCode())
-                .message(responseMessage.getMessage())
-                .build();
-        return ResponseEntity.ok(responseDto);
+        return ResponseFactory.response(ResponseMessage.WEBSITE_DOWNLOADING_STARTED);
     }
 
     @Override
@@ -60,6 +53,6 @@ public class WebsiteControllerApiImpl implements WebsiteApi {
     @SneakyThrows(WebsiteNotFoundException.class)
     public ResponseEntity<ResponseDto> deleteWebsite(@PathVariable Long id) {
         websiteService.deleteWebsite(id);
-        return buildResponseFrom(ResponseMessage.WEBSITE_DELETED);
+        return ResponseFactory.response(ResponseMessage.WEBSITE_DELETED);
     }
 }

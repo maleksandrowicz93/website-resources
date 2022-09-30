@@ -7,6 +7,7 @@ import com.github.maleksandrowicz93.websiteresources.repository.WebsiteRepositor
 import com.github.maleksandrowicz93.websiteresources.utils.InputStreamProvider;
 import com.github.maleksandrowicz93.websiteresources.utils.InputStreamReaderProvider;
 import com.github.maleksandrowicz93.websiteresources.utils.WebsiteTestUtils;
+import com.google.gson.Gson;
 import org.apache.commons.io.IOUtils;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,6 +17,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.MockedStatic;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.kafka.core.KafkaTemplate;
 
 import java.io.InputStream;
@@ -46,12 +48,14 @@ class DownloadServiceTest {
     private UrlCache urlCache;
     @MockBean
     private KafkaTemplate<String, String> kafkaTemplate;
+    @SpyBean
+    private Gson gson;
 
     private DownloadService downloadService;
 
     @BeforeEach
     void setup() {
-        downloadService = new DownloadService(websiteRepository, urlCache, kafkaTemplate);
+        downloadService = new DownloadService(websiteRepository, urlCache, kafkaTemplate, gson);
     }
 
     @AfterEach

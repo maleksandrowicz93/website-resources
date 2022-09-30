@@ -1,22 +1,29 @@
 package com.github.maleksandrowicz93.websiteresources.service;
 
 import com.github.maleksandrowicz93.websiteresources.cache.UrlCache;
+import com.github.maleksandrowicz93.websiteresources.dto.ErrorResponseDto;
+import com.github.maleksandrowicz93.websiteresources.dto.ResponseDto;
 import com.github.maleksandrowicz93.websiteresources.entity.Website;
+import com.github.maleksandrowicz93.websiteresources.enums.ErrorCode;
 import com.github.maleksandrowicz93.websiteresources.enums.KafkaTopic;
+import com.github.maleksandrowicz93.websiteresources.enums.ResponseMessage;
 import com.github.maleksandrowicz93.websiteresources.repository.WebsiteRepository;
 import com.github.maleksandrowicz93.websiteresources.utils.InputStreamProvider;
 import com.github.maleksandrowicz93.websiteresources.utils.InputStreamReaderProvider;
+import com.github.maleksandrowicz93.websiteresources.utils.ResponseFactory;
+import com.google.gson.Gson;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.IOUtils;
+import org.springframework.http.ResponseEntity;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.UUID;
 
 /**
  * This class serves downloading operations.
@@ -29,6 +36,7 @@ public class DownloadService {
     private final WebsiteRepository websiteRepository;
     private final UrlCache urlCache;
     private final KafkaTemplate<String, String> kafkaTemplate;
+    private final Gson gson;
 
     /**
      * This method asynchronously download website from given url.
@@ -50,10 +58,17 @@ public class DownloadService {
                     .build();
             log.info("Saving website into database");
             websiteRepository.save(website);
-            kafkaTemplate.send(topic, "Website downloaded successfully");
+            ResponseMessage responseMessage = ResponseMessage.WEBSITE_DOWNLOADED_SUCCESSFULLY;
+            ResponseDto responseDto = ResponseFactory.responseDto(responseMessage);
+            String json = gson.toJson(responseDto);
+            kafkaTemplate.send(topic, json);
         } catch (IOException e) {
-            log.error(e.getMessage());
-            kafkaTemplate.send(topic, "Website downloading failed");
+            UUID uuid = UUID.randomUUID();
+            log.error("Error with UUID {}: {}", uuid, e.getMessage());
+            ErrorCode errorCode = ErrorCode.WEBSITE_DOWNLOADING_FAILED;
+            ErrorResponseDto errorResponseDto = ResponseFactory.errorResponseDto(errorCode, uuid);
+            String json = gson.toJson(errorResponseDto);
+            kafkaTemplate.send(topic, json);
         } finally {
             log.info("Deleting url from temporary cache");
             urlCache.delete(url);
