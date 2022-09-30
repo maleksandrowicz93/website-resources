@@ -20,6 +20,9 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * This class implements {@link WebsiteApi} contract,
+ */
 @RestController
 @RequiredArgsConstructor
 public class WebsiteControllerApiImpl implements WebsiteApi {
