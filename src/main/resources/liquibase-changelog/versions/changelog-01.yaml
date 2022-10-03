@@ -16,11 +16,11 @@ databaseChangeLog:
                   type: int
               - column:
                   name: url
-                  type: varchar
+                  type: varchar(255)
                   constraints:
                     unique: true
                     nullable: false
                     uniqueConstraintName: unique_website_url
               - column:
                   name: html
-                  type: varchar
+                  type: mediumtext
