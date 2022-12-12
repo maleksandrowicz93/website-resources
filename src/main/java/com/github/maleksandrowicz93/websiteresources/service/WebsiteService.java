@@ -1,12 +1,11 @@
 package com.github.maleksandrowicz93.websiteresources.service;
 
-import com.github.maleksandrowicz93.websiteresources.model.Website;
 import com.github.maleksandrowicz93.websiteresources.enums.KafkaTopic;
 import com.github.maleksandrowicz93.websiteresources.exception.InvalidUrlException;
 import com.github.maleksandrowicz93.websiteresources.exception.WebsiteAlreadyExistsException;
 import com.github.maleksandrowicz93.websiteresources.exception.WebsiteNotFoundException;
+import com.github.maleksandrowicz93.websiteresources.model.Website;
 import com.github.maleksandrowicz93.websiteresources.repository.generic.WebsiteRepository;
-import com.hazelcast.collection.ISet;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.validator.routines.UrlValidator;
@@ -14,6 +13,7 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * This class contains business logic of {@link Website} management.
@@ -25,7 +25,7 @@ public class WebsiteService {
 
     private final DownloadService downloadService;
     private final WebsiteRepository websiteRepository;
-    private final ISet<String> urlCache;
+    private final Set<String> urlCache;
     private final KafkaTemplate<String, String> kafkaTemplate;
 
     /**

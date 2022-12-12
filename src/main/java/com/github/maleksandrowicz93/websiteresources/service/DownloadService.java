@@ -11,7 +11,6 @@ import com.github.maleksandrowicz93.websiteresources.utils.InputStreamProvider;
 import com.github.maleksandrowicz93.websiteresources.utils.InputStreamReaderProvider;
 import com.github.maleksandrowicz93.websiteresources.utils.ResponseFactory;
 import com.google.gson.Gson;
-import com.hazelcast.collection.ISet;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.IOUtils;
@@ -22,6 +21,7 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -33,7 +33,7 @@ import java.util.UUID;
 public class DownloadService {
 
     private final WebsiteRepository websiteRepository;
-    private final ISet<String> urlCache;
+    private final Set<String> urlCache;
     private final KafkaTemplate<String, String> kafkaTemplate;
     private final Gson gson;
 
