@@ -13,8 +13,17 @@ kafka.bootstrapAddress property. Also create kafka topics with names taken from 
 
 Cache for temporary stored urls (while website is being downloaded) needs to have Hazelcast running.
 
+**Features implemented**
+ - downloading website from given url
+ - unit tests
+ - Open Api spec
+ - liquibase script
+ - created profiles dev and prod with connection to various dbs
+ - created generic abstraction for all repositories types
+ - added mongo profile with MongoDB for testing document db
+
 **Project Roadmap**
- - add integration tests
+ - integration tests
  - add security
- - add profiles to differ production and developer db configuration
- - decoupling application into 2 separate microservices
+ - security tests
+ - decoupling application into separated microservices
