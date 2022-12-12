@@ -143,15 +143,13 @@ components:
           example: Website downloaded successfully
     ErrorResponse:
       description: Model represents a response for error
+      type: object
+      properties:
+        uuid:
+          type: string
+          example: f9846d09-215f-457d-8f37-88a20717b4f3
       allOf:
         - $ref: '#/components/schemas/Response'
-        - type: object
-          required:
-            - uuid
-          properties:
-            uuid:
-              type: string
-              example: f9846d09-215f-457d-8f37-88a20717b4f3
   responses:
     Response:
       description: Response for successful operation with context information
