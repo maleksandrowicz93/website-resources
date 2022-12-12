@@ -3,7 +3,7 @@ package com.github.maleksandrowicz93.websiteresources.api;
 import com.github.maleksandrowicz93.websiteresources.converters.WebsiteToWebsiteDtoConverter;
 import com.github.maleksandrowicz93.websiteresources.dto.ResponseDto;
 import com.github.maleksandrowicz93.websiteresources.dto.WebsiteDto;
-import com.github.maleksandrowicz93.websiteresources.entity.Website;
+import com.github.maleksandrowicz93.websiteresources.model.Website;
 import com.github.maleksandrowicz93.websiteresources.enums.ResponseMessage;
 import com.github.maleksandrowicz93.websiteresources.exception.InvalidUrlException;
 import com.github.maleksandrowicz93.websiteresources.exception.WebsiteAlreadyExistsException;
@@ -47,14 +47,14 @@ public class WebsiteControllerApiImpl implements WebsiteApi {
 
     @Override
     @SneakyThrows(WebsiteNotFoundException.class)
-    public ResponseEntity<String> getWebsite(@PathVariable Long id) {
+    public ResponseEntity<String> getWebsite(@PathVariable String id) {
         String website = websiteService.getWebsite(id);
         return ResponseEntity.ok(website);
     }
 
     @Override
     @SneakyThrows(WebsiteNotFoundException.class)
-    public ResponseEntity<ResponseDto> deleteWebsite(@PathVariable Long id) {
+    public ResponseEntity<ResponseDto> deleteWebsite(@PathVariable String id) {
         websiteService.deleteWebsite(id);
         return ResponseFactory.response(ResponseMessage.WEBSITE_DELETED);
     }

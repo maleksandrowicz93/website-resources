@@ -65,8 +65,7 @@ paths:
           description: id of the website
           required: true
           schema:
-            type: integer
-            format: int64
+            type: string
       responses:
         '200':
           description: HTML code of the page
@@ -89,8 +88,7 @@ paths:
           description: Website id to delete
           required: true
           schema:
-            type: integer
-            format: int64
+            type: string
       responses:
         '200':
           $ref: '#/components/responses/Response'
@@ -111,8 +109,7 @@ components:
         - url
       properties:
         id:
-          type: integer
-          format: int64
+          type: string
           example: 10
         url:
           type: string

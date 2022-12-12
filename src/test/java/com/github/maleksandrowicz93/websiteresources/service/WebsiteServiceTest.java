@@ -1,11 +1,11 @@
 package com.github.maleksandrowicz93.websiteresources.service;
 
-import com.github.maleksandrowicz93.websiteresources.entity.Website;
+import com.github.maleksandrowicz93.websiteresources.model.Website;
 import com.github.maleksandrowicz93.websiteresources.enums.KafkaTopic;
 import com.github.maleksandrowicz93.websiteresources.exception.InvalidUrlException;
 import com.github.maleksandrowicz93.websiteresources.exception.WebsiteAlreadyExistsException;
 import com.github.maleksandrowicz93.websiteresources.exception.WebsiteNotFoundException;
-import com.github.maleksandrowicz93.websiteresources.repository.WebsiteRepository;
+import com.github.maleksandrowicz93.websiteresources.repository.jpa.JpaWebsiteRepository;
 import com.github.maleksandrowicz93.websiteresources.utils.WebsiteTestUtils;
 import com.hazelcast.collection.ISet;
 import org.apache.commons.validator.routines.UrlValidator;
@@ -39,7 +39,7 @@ class WebsiteServiceTest {
     @MockBean
     private DownloadService downloadService;
     @MockBean
-    private WebsiteRepository websiteRepository;
+    private JpaWebsiteRepository websiteRepository;
     @MockBean
     private ISet<String> urlCache;
     @MockBean

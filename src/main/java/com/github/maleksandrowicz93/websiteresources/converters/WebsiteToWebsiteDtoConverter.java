@@ -1,7 +1,7 @@
 package com.github.maleksandrowicz93.websiteresources.converters;
 
 import com.github.maleksandrowicz93.websiteresources.dto.WebsiteDto;
-import com.github.maleksandrowicz93.websiteresources.entity.Website;
+import com.github.maleksandrowicz93.websiteresources.model.Website;
 
 /**
  * This class converts {@link Website} object to {@link  WebsiteDto} object.

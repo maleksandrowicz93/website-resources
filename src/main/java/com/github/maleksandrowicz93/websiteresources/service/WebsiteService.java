@@ -1,11 +1,11 @@
 package com.github.maleksandrowicz93.websiteresources.service;
 
-import com.github.maleksandrowicz93.websiteresources.entity.Website;
+import com.github.maleksandrowicz93.websiteresources.model.Website;
 import com.github.maleksandrowicz93.websiteresources.enums.KafkaTopic;
 import com.github.maleksandrowicz93.websiteresources.exception.InvalidUrlException;
 import com.github.maleksandrowicz93.websiteresources.exception.WebsiteAlreadyExistsException;
 import com.github.maleksandrowicz93.websiteresources.exception.WebsiteNotFoundException;
-import com.github.maleksandrowicz93.websiteresources.repository.WebsiteRepository;
+import com.github.maleksandrowicz93.websiteresources.repository.generic.WebsiteRepository;
 import com.hazelcast.collection.ISet;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -64,7 +64,7 @@ public class WebsiteService {
      * @return website's html code
      * @throws WebsiteNotFoundException when {@link Website} with given id is not stored
      */
-    public String getWebsite(long id) throws WebsiteNotFoundException {
+    public String getWebsite(String id) throws WebsiteNotFoundException {
         log.info("Fetching a downloaded website with id: {}", id);
         return websiteRepository.findById(id)
                 .map(Website::getHtml)
@@ -76,7 +76,7 @@ public class WebsiteService {
      * @param id - id of {@link Website} to be deleted
      * @throws WebsiteNotFoundException when {@link Website} with given id is not stored
      */
-    public void deleteWebsite(long id) throws WebsiteNotFoundException {
+    public void deleteWebsite(String id) throws WebsiteNotFoundException {
         log.info("Deleting a downloaded website with id: {}", id);
         if (!websiteRepository.existsById(id)) {
             throw new WebsiteNotFoundException();

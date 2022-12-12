@@ -4,7 +4,7 @@ import com.github.maleksandrowicz93.websiteresources.enums.ErrorCode;
 
 /**
  * This class represents exception thrown when it is tried to add existing
- * {@link com.github.maleksandrowicz93.websiteresources.entity.Website}.
+ * {@link com.github.maleksandrowicz93.websiteresources.model.Website}.
  */
 public class WebsiteAlreadyExistsException extends WebsiteResourcesException {
 

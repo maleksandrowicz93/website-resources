@@ -2,11 +2,11 @@ package com.github.maleksandrowicz93.websiteresources.service;
 
 import com.github.maleksandrowicz93.websiteresources.dto.ErrorResponseDto;
 import com.github.maleksandrowicz93.websiteresources.dto.ResponseDto;
-import com.github.maleksandrowicz93.websiteresources.entity.Website;
 import com.github.maleksandrowicz93.websiteresources.enums.ErrorCode;
 import com.github.maleksandrowicz93.websiteresources.enums.KafkaTopic;
 import com.github.maleksandrowicz93.websiteresources.enums.ResponseMessage;
-import com.github.maleksandrowicz93.websiteresources.repository.WebsiteRepository;
+import com.github.maleksandrowicz93.websiteresources.model.Website;
+import com.github.maleksandrowicz93.websiteresources.repository.generic.WebsiteRepository;
 import com.github.maleksandrowicz93.websiteresources.utils.InputStreamProvider;
 import com.github.maleksandrowicz93.websiteresources.utils.InputStreamReaderProvider;
 import com.github.maleksandrowicz93.websiteresources.utils.ResponseFactory;

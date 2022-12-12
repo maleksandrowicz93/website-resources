@@ -1,6 +1,6 @@
 package com.github.maleksandrowicz93.websiteresources.utils;
 
-import com.github.maleksandrowicz93.websiteresources.entity.Website;
+import com.github.maleksandrowicz93.websiteresources.model.Website;
 
 /**
  * This class contains constants and methods providing {@link Website} related data.

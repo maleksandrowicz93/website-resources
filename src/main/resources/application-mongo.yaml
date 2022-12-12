@@ -1,0 +1,12 @@
+server:
+  port: 9009
+spring:
+  data:
+    mongodb:
+      authentication-database: admin
+      username: admin
+      password: admin
+      database: website
+      port: 27017
+      host: localhost
+      auto-index-creation: true
