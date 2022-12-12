@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
  */
 @RestController
 @RequiredArgsConstructor
-public class WebsiteControllerApiImpl implements WebsiteApi {
+public class WebsiteApiImpl implements WebsiteApi {
 
     private final WebsiteService websiteService;
 

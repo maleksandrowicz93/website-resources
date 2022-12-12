@@ -11,10 +11,24 @@ info:
     url: http://www.apache.org/licenses/LICENSE-2.0.html
   version: 1.0.0
 externalDocs:
-  description: Find out more about Website Downloader Server
+  description: Find out more about swagger
   url: http://swagger.io
 servers:
-  - url: https://petstore3.swagger.io/api/v3
+  - url: '{protocol}://{hostname}:{port}/website-resources'
+    variables:
+      protocol:
+        enum:
+          - 'http'
+          - 'https'
+        default: 'http'
+      hostname:
+        default: localhost
+      port:
+        enum:
+          - '9000'
+          - '9001'
+          - '9009'
+        default: '9000'
 tags:
   - name: website
     description: API related to website resources
