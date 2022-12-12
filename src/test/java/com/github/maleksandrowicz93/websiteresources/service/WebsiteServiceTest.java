@@ -1,13 +1,12 @@
 package com.github.maleksandrowicz93.websiteresources.service;
 
-import com.github.maleksandrowicz93.websiteresources.model.Website;
 import com.github.maleksandrowicz93.websiteresources.enums.KafkaTopic;
 import com.github.maleksandrowicz93.websiteresources.exception.InvalidUrlException;
 import com.github.maleksandrowicz93.websiteresources.exception.WebsiteAlreadyExistsException;
 import com.github.maleksandrowicz93.websiteresources.exception.WebsiteNotFoundException;
+import com.github.maleksandrowicz93.websiteresources.model.Website;
 import com.github.maleksandrowicz93.websiteresources.repository.jpa.JpaWebsiteRepository;
 import com.github.maleksandrowicz93.websiteresources.utils.WebsiteTestUtils;
-import com.hazelcast.collection.ISet;
 import org.apache.commons.validator.routines.UrlValidator;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,6 +20,7 @@ import org.springframework.kafka.core.KafkaTemplate;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -41,7 +41,7 @@ class WebsiteServiceTest {
     @MockBean
     private JpaWebsiteRepository websiteRepository;
     @MockBean
-    private ISet<String> urlCache;
+    private Set<String> urlCache;
     @MockBean
     private KafkaTemplate<String, String> kafkaTemplate;
 

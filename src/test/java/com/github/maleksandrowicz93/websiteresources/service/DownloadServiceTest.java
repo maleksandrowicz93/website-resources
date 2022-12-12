@@ -1,13 +1,12 @@
 package com.github.maleksandrowicz93.websiteresources.service;
 
-import com.github.maleksandrowicz93.websiteresources.model.Website;
 import com.github.maleksandrowicz93.websiteresources.enums.KafkaTopic;
+import com.github.maleksandrowicz93.websiteresources.model.Website;
 import com.github.maleksandrowicz93.websiteresources.repository.jpa.JpaWebsiteRepository;
 import com.github.maleksandrowicz93.websiteresources.utils.InputStreamProvider;
 import com.github.maleksandrowicz93.websiteresources.utils.InputStreamReaderProvider;
 import com.github.maleksandrowicz93.websiteresources.utils.WebsiteTestUtils;
 import com.google.gson.Gson;
-import com.hazelcast.collection.ISet;
 import org.apache.commons.io.IOUtils;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -23,6 +22,7 @@ import org.springframework.kafka.core.KafkaTemplate;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -45,7 +45,7 @@ class DownloadServiceTest {
     @MockBean
     private JpaWebsiteRepository websiteRepository;
     @MockBean
-    private ISet<String> urlCache;
+    private Set<String> urlCache;
     @MockBean
     private KafkaTemplate<String, String> kafkaTemplate;
     @SpyBean
