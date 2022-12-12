@@ -36,7 +36,7 @@ import static org.mockito.Mockito.*;
 class DownloadServiceTest {
 
     private static final String URL = WebsiteTestUtils.URL;
-    private static final long ID = WebsiteTestUtils.ID;
+    private static final String ID = WebsiteTestUtils.ID;
 
     private final MockedStatic<InputStreamProvider> inputStreamProviderMockedStatic = mockStatic(InputStreamProvider.class);
     private final MockedStatic<InputStreamReaderProvider> inputStreamReaderProviderMockedStatic = mockStatic(InputStreamReaderProvider.class);

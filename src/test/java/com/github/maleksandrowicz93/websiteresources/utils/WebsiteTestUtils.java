@@ -8,7 +8,7 @@ import com.github.maleksandrowicz93.websiteresources.model.Website;
 public class WebsiteTestUtils {
 
     public static final String URL = "http://test.com";
-    public static final long ID = 1;
+    public static final String ID = "1";
 
     private WebsiteTestUtils() {}
 

@@ -32,7 +32,7 @@ import static org.mockito.Mockito.*;
 class WebsiteServiceTest {
 
     private static final String URL = WebsiteTestUtils.URL;
-    private static final long ID = WebsiteTestUtils.ID;
+    private static final String ID = WebsiteTestUtils.ID;
 
     private final MockedStatic<UrlValidator> urlValidatorMockedStatic = mockStatic(UrlValidator.class);
 
@@ -150,7 +150,7 @@ class WebsiteServiceTest {
     void shouldGetWebsite() throws WebsiteNotFoundException {
         //given
         Website website = WebsiteTestUtils.buildWebsite();
-        when(websiteRepository.findById(anyLong())).thenReturn(Optional.of(website));
+        when(websiteRepository.findById(anyString())).thenReturn(Optional.of(website));
 
         //when
         String html = websiteService.getWebsite(ID);
@@ -164,7 +164,7 @@ class WebsiteServiceTest {
     @DisplayName("Should not get website when not stored in repo")
     void shouldNotGetWebsiteWhenNotStoredInRepo() {
         //given
-        when(websiteRepository.findById(anyLong())).thenReturn(Optional.empty());
+        when(websiteRepository.findById(anyString())).thenReturn(Optional.empty());
 
         //when
         //then
@@ -175,8 +175,8 @@ class WebsiteServiceTest {
     @DisplayName("Should delete website")
     void shouldDeleteWebsite() throws WebsiteNotFoundException {
         //given
-        when(websiteRepository.existsById(anyLong())).thenReturn(true);
-        doNothing().when(websiteRepository).deleteById(anyLong());
+        when(websiteRepository.existsById(anyString())).thenReturn(true);
+        doNothing().when(websiteRepository).deleteById(anyString());
 
         //when
         websiteService.deleteWebsite(ID);
@@ -189,7 +189,7 @@ class WebsiteServiceTest {
     @DisplayName("Should not delete website when not stored in repo")
     void shouldNotDeleteWebsiteWhenNotStoredInRepo() {
         //given
-        when(websiteRepository.existsById(anyLong())).thenReturn(false);
+        when(websiteRepository.existsById(anyString())).thenReturn(false);
 
         //when
         assertThrows(WebsiteNotFoundException.class, () -> websiteService.deleteWebsite(ID));

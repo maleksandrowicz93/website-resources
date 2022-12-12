@@ -8,6 +8,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
+import java.util.Objects;
 
 /**
  * This class represents entity of stored website.
@@ -30,4 +31,20 @@ public class Website {
     @Indexed(unique = true)
     private String url;
     private String html;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Website)) return false;
+        Website website = (Website) o;
+        return id != null
+                && Objects.equals(id, website.id)
+                && Objects.equals(url, website.url)
+                && Objects.equals(html, website.html);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, url, html);
+    }
 }
