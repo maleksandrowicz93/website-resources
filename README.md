@@ -21,9 +21,9 @@ Cache for temporary stored urls (while website is being downloaded) needs to hav
  - created profiles dev and prod with connection to various dbs
  - created generic abstraction for all repositories types
  - added mongo profile with MongoDB for testing document db
+ - integration tests
 
 **Project Roadmap**
- - integration tests
  - add security
  - security tests
  - decoupling application into separated microservices
