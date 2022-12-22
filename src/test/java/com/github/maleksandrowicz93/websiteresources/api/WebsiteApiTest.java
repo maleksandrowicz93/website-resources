@@ -8,6 +8,7 @@ import com.github.maleksandrowicz93.websiteresources.enums.ResponseMessage;
 import com.github.maleksandrowicz93.websiteresources.model.Website;
 import com.github.maleksandrowicz93.websiteresources.repository.generic.WebsiteRepository;
 import com.github.maleksandrowicz93.websiteresources.utils.WebsiteTestUtils;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,8 +51,8 @@ public class WebsiteApiTest {
     @Autowired
     private Set<String> urlCache;
 
-    @BeforeEach
-    void setup() {
+    @AfterEach
+    void cleanup() {
         websiteRepository.deleteAll();
         urlCache.forEach(urlCache::remove);
     }
