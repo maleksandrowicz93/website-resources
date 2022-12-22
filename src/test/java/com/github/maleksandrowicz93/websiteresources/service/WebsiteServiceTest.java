@@ -1,5 +1,6 @@
 package com.github.maleksandrowicz93.websiteresources.service;
 
+import com.github.maleksandrowicz93.websiteresources.annotation.EmbeddedKafkaTest;
 import com.github.maleksandrowicz93.websiteresources.enums.KafkaTopic;
 import com.github.maleksandrowicz93.websiteresources.exception.InvalidUrlException;
 import com.github.maleksandrowicz93.websiteresources.exception.WebsiteAlreadyExistsException;
@@ -13,11 +14,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.kafka.test.context.EmbeddedKafka;
-import org.springframework.test.annotation.DirtiesContext;
 
 import java.util.Collections;
 import java.util.List;
@@ -30,9 +28,7 @@ import static org.mockito.Mockito.*;
 /**
  * This class tests {@link WebsiteService} public methods.
  */
-@SpringBootTest
-@DirtiesContext
-@EmbeddedKafka(partitions = 1, brokerProperties = {"listeners=PLAINTEXT://localhost:9092", "port=9092"})
+@EmbeddedKafkaTest
 class WebsiteServiceTest {
 
     private static final String URL = WebsiteTestUtils.URL;

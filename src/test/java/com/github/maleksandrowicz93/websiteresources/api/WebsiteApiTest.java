@@ -1,5 +1,6 @@
 package com.github.maleksandrowicz93.websiteresources.api;
 
+import com.github.maleksandrowicz93.websiteresources.annotation.EmbeddedKafkaTest;
 import com.github.maleksandrowicz93.websiteresources.config.Profiles;
 import com.github.maleksandrowicz93.websiteresources.config.TestConfig;
 import com.github.maleksandrowicz93.websiteresources.enums.ErrorCode;
@@ -11,11 +12,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
-import org.springframework.kafka.test.context.EmbeddedKafka;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -30,12 +28,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest
-@DirtiesContext
+@EmbeddedKafkaTest
 @Import(TestConfig.class)
 @ActiveProfiles(profiles = Profiles.DEV)
 @AutoConfigureMockMvc
-@EmbeddedKafka(partitions = 1, brokerProperties = {"listeners=PLAINTEXT://localhost:9092", "port=9092"})
 public class WebsiteApiTest {
 
     private static final String URL = WebsiteTestUtils.URL;

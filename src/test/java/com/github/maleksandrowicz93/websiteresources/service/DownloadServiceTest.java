@@ -1,5 +1,6 @@
 package com.github.maleksandrowicz93.websiteresources.service;
 
+import com.github.maleksandrowicz93.websiteresources.annotation.EmbeddedKafkaTest;
 import com.github.maleksandrowicz93.websiteresources.enums.KafkaTopic;
 import com.github.maleksandrowicz93.websiteresources.model.Website;
 import com.github.maleksandrowicz93.websiteresources.repository.jpa.JpaWebsiteRepository;
@@ -13,12 +14,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.MockedStatic;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.kafka.test.context.EmbeddedKafka;
-import org.springframework.test.annotation.DirtiesContext;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -34,9 +32,7 @@ import static org.mockito.Mockito.*;
 /**
  * This class tests {@link DownloadService} public methods.
  */
-@SpringBootTest
-@DirtiesContext
-@EmbeddedKafka(partitions = 1, brokerProperties = {"listeners=PLAINTEXT://localhost:9092", "port=9092"})
+@EmbeddedKafkaTest
 class DownloadServiceTest {
 
     private static final String URL = WebsiteTestUtils.URL;
