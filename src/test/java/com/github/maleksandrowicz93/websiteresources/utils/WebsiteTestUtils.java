@@ -9,18 +9,30 @@ public class WebsiteTestUtils {
 
     public static final String URL = "http://test.com";
     public static final String ID = "1";
+    public static final String HTML = "<html>";
 
     private WebsiteTestUtils() {}
 
     /**
-     * This method provides {@link Website} instance for tests purposes.
+     * This method provides {@link Website} instance with declared id for tests purposes.
      * @return {@link Website} instance
      */
-    public static Website buildWebsite() {
+    public static Website savedWebsite() {
         return Website.builder()
                 .id(ID)
                 .url(URL)
-                .html("<html>")
+                .html(HTML)
+                .build();
+    }
+
+    /**
+     * This method provides {@link Website} instance with declared id for tests purposes.
+     * @return {@link Website} instance
+     */
+    public static Website websiteToAdd() {
+        return Website.builder()
+                .url(URL)
+                .html(HTML)
                 .build();
     }
 }

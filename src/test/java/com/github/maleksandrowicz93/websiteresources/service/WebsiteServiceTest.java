@@ -16,6 +16,8 @@ import org.mockito.MockedStatic;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.kafka.test.context.EmbeddedKafka;
+import org.springframework.test.annotation.DirtiesContext;
 
 import java.util.Collections;
 import java.util.List;
@@ -29,6 +31,8 @@ import static org.mockito.Mockito.*;
  * This class tests {@link WebsiteService} public methods.
  */
 @SpringBootTest
+@DirtiesContext
+@EmbeddedKafka(partitions = 1, brokerProperties = {"listeners=PLAINTEXT://localhost:9092", "port=9092"})
 class WebsiteServiceTest {
 
     private static final String URL = WebsiteTestUtils.URL;
@@ -133,7 +137,7 @@ class WebsiteServiceTest {
     @DisplayName("Should get all websites")
     void shouldGetAllWebsites() {
         //given
-        Website website = WebsiteTestUtils.buildWebsite();
+        Website website = WebsiteTestUtils.savedWebsite();
         List<Website> expectedWebsites = Collections.singletonList(website);
         when(websiteRepository.findAll()).thenReturn(expectedWebsites);
 
@@ -149,7 +153,7 @@ class WebsiteServiceTest {
     @DisplayName("Should get website")
     void shouldGetWebsite() throws WebsiteNotFoundException {
         //given
-        Website website = WebsiteTestUtils.buildWebsite();
+        Website website = WebsiteTestUtils.savedWebsite();
         when(websiteRepository.findById(anyString())).thenReturn(Optional.of(website));
 
         //when

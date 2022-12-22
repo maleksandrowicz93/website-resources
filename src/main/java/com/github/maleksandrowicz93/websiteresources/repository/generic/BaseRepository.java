@@ -13,4 +13,5 @@ public interface BaseRepository<T, ID> {
     boolean existsById(ID id);
     Optional<T> findById(ID id);
     void deleteById(ID id);
+    void deleteAll();
 }

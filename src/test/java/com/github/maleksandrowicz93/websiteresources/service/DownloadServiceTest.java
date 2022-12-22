@@ -3,8 +3,7 @@ package com.github.maleksandrowicz93.websiteresources.service;
 import com.github.maleksandrowicz93.websiteresources.enums.KafkaTopic;
 import com.github.maleksandrowicz93.websiteresources.model.Website;
 import com.github.maleksandrowicz93.websiteresources.repository.jpa.JpaWebsiteRepository;
-import com.github.maleksandrowicz93.websiteresources.utils.InputStreamProvider;
-import com.github.maleksandrowicz93.websiteresources.utils.InputStreamReaderProvider;
+import com.github.maleksandrowicz93.websiteresources.utils.UrlIoStreamFactory;
 import com.github.maleksandrowicz93.websiteresources.utils.WebsiteTestUtils;
 import com.google.gson.Gson;
 import org.apache.commons.io.IOUtils;
@@ -18,7 +17,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.kafka.test.context.EmbeddedKafka;
+import org.springframework.test.annotation.DirtiesContext;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
@@ -33,19 +35,21 @@ import static org.mockito.Mockito.*;
  * This class tests {@link DownloadService} public methods.
  */
 @SpringBootTest
+@DirtiesContext
+@EmbeddedKafka(partitions = 1, brokerProperties = {"listeners=PLAINTEXT://localhost:9092", "port=9092"})
 class DownloadServiceTest {
 
     private static final String URL = WebsiteTestUtils.URL;
     private static final String ID = WebsiteTestUtils.ID;
 
-    private final MockedStatic<InputStreamProvider> inputStreamProviderMockedStatic = mockStatic(InputStreamProvider.class);
-    private final MockedStatic<InputStreamReaderProvider> inputStreamReaderProviderMockedStatic = mockStatic(InputStreamReaderProvider.class);
     private final MockedStatic<IOUtils> ioUtilsMockedStatic = mockStatic(IOUtils.class);
 
     @MockBean
     private JpaWebsiteRepository websiteRepository;
     @MockBean
     private Set<String> urlCache;
+    @MockBean
+    private UrlIoStreamFactory ioStreamFactory;
     @MockBean
     private KafkaTemplate<String, String> kafkaTemplate;
     @SpyBean
@@ -55,27 +59,24 @@ class DownloadServiceTest {
 
     @BeforeEach
     void setup() {
-        downloadService = new DownloadService(websiteRepository, urlCache, kafkaTemplate, gson);
+        downloadService = new DownloadService(websiteRepository, urlCache, ioStreamFactory, kafkaTemplate, gson);
     }
 
     @AfterEach
     void cleanup() {
-        inputStreamProviderMockedStatic.close();
-        inputStreamReaderProviderMockedStatic.close();
         ioUtilsMockedStatic.close();
     }
 
     @Test
     @DisplayName("Should download website")
-    void shouldDownloadWebsite() {
+    void shouldDownloadWebsite() throws IOException {
         //given
-        Website expectedWebsite = WebsiteTestUtils.buildWebsite();
+        Website expectedWebsite = WebsiteTestUtils.savedWebsite();
         when(urlCache.add(anyString())).thenReturn(true);
         InputStream inputStream = mock(InputStream.class);
-        inputStreamProviderMockedStatic.when(() -> InputStreamProvider.from(anyString())).thenReturn(inputStream);
+        when(ioStreamFactory.inputStream(anyString())).thenReturn(inputStream);
         InputStreamReader inputStreamReader = mock(InputStreamReader.class);
-        inputStreamReaderProviderMockedStatic.when(() -> InputStreamReaderProvider.from(inputStream))
-                .thenReturn(inputStreamReader);
+        when(ioStreamFactory.inputStreamReader(inputStream)).thenReturn(inputStreamReader);
         String html = expectedWebsite.getHtml();
         ioUtilsMockedStatic.when(() -> IOUtils.toString(inputStreamReader)).thenReturn(html);
         ArgumentCaptor<Website> websiteArgumentCaptor = ArgumentCaptor.forClass(Website.class);
@@ -102,11 +103,10 @@ class DownloadServiceTest {
 
     @Test
     @DisplayName("Should download website when malformed URL")
-    void shouldNotDownloadWebsiteWhenMalformedUrl() {
+    void shouldNotDownloadWebsiteWhenMalformedUrl() throws IOException {
         //given
         when(urlCache.add(anyString())).thenReturn(true);
-        inputStreamProviderMockedStatic.when(() -> InputStreamProvider.from(anyString()))
-                .thenThrow(MalformedURLException.class);
+        when(ioStreamFactory.inputStream(anyString())).thenThrow(MalformedURLException.class);
         when(urlCache.remove(anyString())).thenReturn(true);
 
         //when

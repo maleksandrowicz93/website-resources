@@ -7,8 +7,7 @@ import com.github.maleksandrowicz93.websiteresources.enums.KafkaTopic;
 import com.github.maleksandrowicz93.websiteresources.enums.ResponseMessage;
 import com.github.maleksandrowicz93.websiteresources.model.Website;
 import com.github.maleksandrowicz93.websiteresources.repository.generic.WebsiteRepository;
-import com.github.maleksandrowicz93.websiteresources.utils.InputStreamProvider;
-import com.github.maleksandrowicz93.websiteresources.utils.InputStreamReaderProvider;
+import com.github.maleksandrowicz93.websiteresources.utils.IoStreamFactory;
 import com.github.maleksandrowicz93.websiteresources.utils.ResponseFactory;
 import com.google.gson.Gson;
 import lombok.RequiredArgsConstructor;
@@ -34,6 +33,7 @@ public class DownloadService {
 
     private final WebsiteRepository websiteRepository;
     private final Set<String> urlCache;
+    private final IoStreamFactory<String> ioStreamFactory;
     private final KafkaTemplate<String, String> kafkaTemplate;
     private final Gson gson;
 
@@ -48,8 +48,8 @@ public class DownloadService {
         urlCache.add(url);
         log.info("Getting html code from url");
         String topic = KafkaTopic.NOTIFICATION.getText();
-        try (InputStream inputStream = InputStreamProvider.from(url)) {
-            InputStreamReader inputStreamReader = InputStreamReaderProvider.from(inputStream);
+        try (InputStream inputStream = ioStreamFactory.inputStream(url)) {
+            InputStreamReader inputStreamReader = ioStreamFactory.inputStreamReader(inputStream);
             String html = IOUtils.toString(inputStreamReader);
             Website website = Website.builder()
                     .url(url)
