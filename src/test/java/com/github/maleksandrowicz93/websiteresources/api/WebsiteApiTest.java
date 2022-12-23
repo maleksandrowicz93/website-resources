@@ -1,21 +1,17 @@
 package com.github.maleksandrowicz93.websiteresources.api;
 
-import com.github.maleksandrowicz93.websiteresources.annotation.EmbeddedKafkaTest;
-import com.github.maleksandrowicz93.websiteresources.config.Profiles;
-import com.github.maleksandrowicz93.websiteresources.config.TestConfig;
+import com.github.maleksandrowicz93.websiteresources.annotation.IntegrationTest;
 import com.github.maleksandrowicz93.websiteresources.enums.ErrorCode;
 import com.github.maleksandrowicz93.websiteresources.enums.ResponseMessage;
 import com.github.maleksandrowicz93.websiteresources.model.Website;
 import com.github.maleksandrowicz93.websiteresources.repository.generic.WebsiteRepository;
+import com.github.maleksandrowicz93.websiteresources.utils.ApiUtils;
 import com.github.maleksandrowicz93.websiteresources.utils.WebsiteTestUtils;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ActiveProfiles;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
@@ -29,23 +25,19 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@EmbeddedKafkaTest
-@Import(TestConfig.class)
-@ActiveProfiles(profiles = Profiles.DEV)
-@AutoConfigureMockMvc
+@IntegrationTest
+@WithMockUser
 public class WebsiteApiTest {
 
     private static final String URL = WebsiteTestUtils.URL;
     private static final String HTML = WebsiteTestUtils.HTML;
-    private static final String BASE_PATH = "/website";
+    private static final String BASE_PATH = ApiUtils.BASE_PATH;
     private static final String JSON_ROOT = "$";
     private static final String JSON_FIRST_ELEMENT = JSON_ROOT + "[0]";
     private static final int UUID_LENGTH = UUID.randomUUID().toString().length();
 
     @Autowired
     private MockMvc mockMvc;
-    @Autowired
-    private WebsiteApi websiteApi;
     @Autowired
     private WebsiteRepository websiteRepository;
     @Autowired
@@ -142,7 +134,7 @@ public class WebsiteApiTest {
     void getWebsite() throws Exception {
         Website website = WebsiteTestUtils.websiteToAdd();
         website = websiteRepository.save(website);
-        mockMvc.perform(get(getSpecifiedPath(website.getId())))
+        mockMvc.perform(get(ApiUtils.getSpecifiedPath(website.getId())))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath(JSON_ROOT).isNotEmpty())
@@ -150,13 +142,9 @@ public class WebsiteApiTest {
                 .andExpect(jsonPath(JSON_ROOT).value(HTML));
     }
 
-    private String getSpecifiedPath(String id) {
-        return BASE_PATH + "/" + id;
-    }
-
     @Test
     void shouldNotGetWebsiteIfNotExists() throws Exception {
-        ResultActions resultActions = mockMvc.perform(get(getSpecifiedPath("1")))
+        ResultActions resultActions = mockMvc.perform(get(ApiUtils.getSpecifiedPath()))
                 .andDo(print())
                 .andExpect(status().isNotFound());
         testErrorResponse(ErrorCode.WEBSITE_NOT_FOUND, resultActions);
@@ -167,7 +155,7 @@ public class WebsiteApiTest {
         Website website = WebsiteTestUtils.websiteToAdd();
         website = websiteRepository.save(website);
         ResponseMessage responseMessage = ResponseMessage.WEBSITE_DELETED;
-        mockMvc.perform(delete(getSpecifiedPath(website.getId())))
+        mockMvc.perform(delete(ApiUtils.getSpecifiedPath(website.getId())))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath(JSON_ROOT).isNotEmpty())
@@ -177,7 +165,7 @@ public class WebsiteApiTest {
 
     @Test
     void shouldNotDeleteWebsiteIfNotExists() throws Exception {
-        ResultActions resultActions = mockMvc.perform(delete(getSpecifiedPath("1")))
+        ResultActions resultActions = mockMvc.perform(delete(ApiUtils.getSpecifiedPath()))
                 .andDo(print())
                 .andExpect(status().isNotFound());
         testErrorResponse(ErrorCode.WEBSITE_NOT_FOUND, resultActions);
