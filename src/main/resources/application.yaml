@@ -9,3 +9,7 @@ spring:
       matching-strategy: ant_path_matcher
   liquibase:
     change-log: classpath:liquibase-changelog/liquibase-changelog.yaml
+  security:
+    user:
+      name: user
+      password: $2a$10$tSVLXChBM9NSiNmhoJ0u8er2ajudTf12O01EEfi4gmcooZEFZp9G6
