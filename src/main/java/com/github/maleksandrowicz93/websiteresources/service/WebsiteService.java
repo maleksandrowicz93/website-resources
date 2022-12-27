@@ -23,7 +23,6 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class WebsiteService {
 
-    private final DownloadService downloadService;
     private final WebsiteRepository websiteRepository;
     private final Set<String> urlCache;
     private final KafkaTemplate<String, String> kafkaTemplate;

@@ -8,6 +8,7 @@ import com.github.maleksandrowicz93.websiteresources.repository.generic.WebsiteR
 import com.github.maleksandrowicz93.websiteresources.utils.ApiUtils;
 import com.github.maleksandrowicz93.websiteresources.utils.WebsiteTestUtils;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -50,7 +51,8 @@ public class WebsiteApiTest {
     }
 
     @Test
-    void getEmptyListWhenNoWebsiteAdded() throws Exception {
+    @DisplayName("Should get empty list when no website added")
+    void shouldGetEmptyListWhenNoWebsiteAdded() throws Exception {
         mockMvc.perform(get(BASE_PATH))
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -59,7 +61,8 @@ public class WebsiteApiTest {
     }
 
     @Test
-    void getAllWebsites() throws Exception {
+    @DisplayName("Should get all websites")
+    void shouldGetAllWebsites() throws Exception {
         Website website = websiteRepository.save(WebsiteTestUtils.websiteToAdd());
         mockMvc.perform(get(BASE_PATH))
                 .andDo(print())
@@ -73,7 +76,8 @@ public class WebsiteApiTest {
     }
 
     @Test
-    void downloadWebsite() throws Exception {
+    @DisplayName("Should download website")
+    void shouldDownloadWebsite() throws Exception {
         ResponseMessage responseMessage = ResponseMessage.WEBSITE_DOWNLOADING_STARTED;
         mockMvc.perform(post(BASE_PATH)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -86,6 +90,7 @@ public class WebsiteApiTest {
     }
 
     @Test
+    @DisplayName("Should not download website when is being downloaded")
     void shouldNotDownloadWebsiteWhenIsBeingDownloaded() throws Exception {
         ErrorCode errorCode = ErrorCode.WEBSITE_ALREADY_EXISTS;
         urlCache.add(URL);
@@ -108,6 +113,7 @@ public class WebsiteApiTest {
     }
 
     @Test
+    @DisplayName("Should not download webiste when is already downloaded")
     void shouldNotDownloadWebsiteWhenIsAlreadyDownloaded() throws Exception {
         ErrorCode errorCode = ErrorCode.WEBSITE_ALREADY_EXISTS;
         websiteRepository.save(WebsiteTestUtils.websiteToAdd());
@@ -120,6 +126,7 @@ public class WebsiteApiTest {
     }
 
     @Test
+    @DisplayName("Should not donwload website when malformed URL")
     void shouldNotDownloadWebsiteWhenMalformedUrl() throws Exception {
         ErrorCode errorCode = ErrorCode.INVALID_URL;
         ResultActions resultActions = mockMvc.perform(post(BASE_PATH)
@@ -131,7 +138,8 @@ public class WebsiteApiTest {
     }
 
     @Test
-    void getWebsite() throws Exception {
+    @DisplayName("Should get website")
+    void shouldGetWebsite() throws Exception {
         Website website = WebsiteTestUtils.websiteToAdd();
         website = websiteRepository.save(website);
         mockMvc.perform(get(ApiUtils.getSpecifiedPath(website.getId())))
@@ -143,6 +151,7 @@ public class WebsiteApiTest {
     }
 
     @Test
+    @DisplayName("Should not get website if not exists")
     void shouldNotGetWebsiteIfNotExists() throws Exception {
         ResultActions resultActions = mockMvc.perform(get(ApiUtils.getSpecifiedPath()))
                 .andDo(print())
@@ -151,7 +160,8 @@ public class WebsiteApiTest {
     }
 
     @Test
-    void deleteWebsite() throws Exception {
+    @DisplayName("Should delete website")
+    void shouldDeleteWebsite() throws Exception {
         Website website = WebsiteTestUtils.websiteToAdd();
         website = websiteRepository.save(website);
         ResponseMessage responseMessage = ResponseMessage.WEBSITE_DELETED;
@@ -164,6 +174,7 @@ public class WebsiteApiTest {
     }
 
     @Test
+    @DisplayName("Should not delete website if not exists")
     void shouldNotDeleteWebsiteIfNotExists() throws Exception {
         ResultActions resultActions = mockMvc.perform(delete(ApiUtils.getSpecifiedPath()))
                 .andDo(print())

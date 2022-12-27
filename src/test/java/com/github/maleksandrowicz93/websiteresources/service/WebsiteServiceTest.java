@@ -37,8 +37,6 @@ class WebsiteServiceTest {
     private final MockedStatic<UrlValidator> urlValidatorMockedStatic = mockStatic(UrlValidator.class);
 
     @MockBean
-    private DownloadService downloadService;
-    @MockBean
     private JpaWebsiteRepository websiteRepository;
     @MockBean
     private Set<String> urlCache;
@@ -49,7 +47,7 @@ class WebsiteServiceTest {
 
     @BeforeEach
     void setup() {
-        websiteService = new WebsiteService(downloadService, websiteRepository, urlCache, kafkaTemplate);
+        websiteService = new WebsiteService(websiteRepository, urlCache, kafkaTemplate);
     }
 
     @AfterEach
@@ -64,7 +62,6 @@ class WebsiteServiceTest {
         mockCheckingUrlBehavior();
         when(urlCache.contains(anyString())).thenReturn(false);
         when(websiteRepository.existsByUrl(anyString())).thenReturn(false);
-        doNothing().when(downloadService).downloadWebsite(anyString());
 
         //when
         websiteService.downloadWebsite(URL);
@@ -93,7 +90,6 @@ class WebsiteServiceTest {
         //then
         verify(urlCache, times(0)).contains(URL);
         verify(websiteRepository, times(0)).existsByUrl(URL);
-        verify(downloadService, times(0)).downloadWebsite(URL);
     }
 
     @Test
@@ -109,7 +105,6 @@ class WebsiteServiceTest {
         //then
         verify(urlCache).contains(URL);
         verify(websiteRepository, times(0)).existsByUrl(URL);
-        verify(downloadService, times(0)).downloadWebsite(URL);
     }
 
     @Test
@@ -126,7 +121,6 @@ class WebsiteServiceTest {
         //then
         verify(urlCache).contains(URL);
         verify(websiteRepository).existsByUrl(URL);
-        verify(downloadService, times(0)).downloadWebsite(URL);
     }
 
     @Test

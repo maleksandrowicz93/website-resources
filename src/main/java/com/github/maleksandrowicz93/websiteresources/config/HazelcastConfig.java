@@ -11,7 +11,6 @@ import java.util.Set;
 /**
  * This class stores configuration of Hazelcast.
  */
-@Profile(Profiles.PROD)
 @Configuration
 public class HazelcastConfig {
 
