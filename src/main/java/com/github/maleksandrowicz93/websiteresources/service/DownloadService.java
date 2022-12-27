@@ -41,8 +41,8 @@ public class DownloadService {
      * This method asynchronously download website from given url.
      * @param url - String url of website to be downloaded
      */
-    @KafkaListener(topics = "website-download", groupId = "website-resources")
-    public void downloadWebsite(String url) {
+    @KafkaListener(topics = "download-website", groupId = "website-resources")
+    public void onDownloadWebsite(String url) {
         log.info("Retrieved download website job for url: {}", url);
         log.info("Putting url into temporary cache");
         urlCache.add(url);

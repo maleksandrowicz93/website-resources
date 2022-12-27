@@ -86,7 +86,7 @@ class DownloadServiceTest {
         when(urlCache.remove(anyString())).thenReturn(true);
 
         //when
-        downloadService.downloadWebsite(URL);
+        downloadService.onDownloadWebsite(URL);
 
         //then
         verify(urlCache).add(URL);
@@ -106,7 +106,7 @@ class DownloadServiceTest {
         when(urlCache.remove(anyString())).thenReturn(true);
 
         //when
-        downloadService.downloadWebsite(URL);
+        downloadService.onDownloadWebsite(URL);
 
         //then
         verify(urlCache).add(URL);

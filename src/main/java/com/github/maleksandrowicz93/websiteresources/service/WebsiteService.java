@@ -45,7 +45,7 @@ public class WebsiteService {
             throw new WebsiteAlreadyExistsException();
         }
         log.info("Queue download website job");
-        kafkaTemplate.send(KafkaTopic.WEBSITE_DOWNLOAD.getText(), url);
+        kafkaTemplate.send(KafkaTopic.DOWNLOAD_WEBSITE.getText(), url);
     }
 
     /**

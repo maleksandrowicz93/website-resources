@@ -28,7 +28,7 @@ public class KafkaTopicConfig {
     }
 
     @Bean
-    public NewTopic websiteTopic() {
-        return new NewTopic(KafkaTopic.WEBSITE_DOWNLOAD.getText(), 1, (short) 1);
+    public NewTopic downloadWebsiteTopic() {
+        return new NewTopic(KafkaTopic.DOWNLOAD_WEBSITE.getText(), 1, (short) 1);
     }
 }

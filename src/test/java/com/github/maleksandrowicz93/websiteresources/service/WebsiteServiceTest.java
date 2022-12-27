@@ -67,7 +67,7 @@ class WebsiteServiceTest {
         websiteService.downloadWebsite(URL);
 
         //then
-        verify(kafkaTemplate).send(KafkaTopic.WEBSITE_DOWNLOAD.getText(), URL);
+        verify(kafkaTemplate).send(KafkaTopic.DOWNLOAD_WEBSITE.getText(), URL);
     }
 
     private void mockCheckingUrlBehavior() {

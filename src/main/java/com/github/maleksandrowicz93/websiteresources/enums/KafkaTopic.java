@@ -10,7 +10,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum KafkaTopic {
 
-    WEBSITE_DOWNLOAD("website-download"),
+    DOWNLOAD_WEBSITE("website-download"),
     NOTIFICATION("notification");
 
     private final String text;
