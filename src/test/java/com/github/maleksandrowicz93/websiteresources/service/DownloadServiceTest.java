@@ -22,7 +22,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
-import java.util.Set;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -43,7 +43,7 @@ class DownloadServiceTest {
     @MockBean
     private JpaWebsiteRepository websiteRepository;
     @MockBean
-    private Set<String> urlCache;
+    private Map<String, String> urlCache;
     @MockBean
     private UrlIoStreamFactory ioStreamFactory;
     @MockBean
@@ -68,13 +68,14 @@ class DownloadServiceTest {
     void shouldDownloadWebsite() throws IOException {
         //given
         Website expectedWebsite = WebsiteTestUtils.savedWebsite();
-        when(urlCache.add(anyString())).thenReturn(true);
+        when(urlCache.putIfAbsent(eq(URL), eq(null))).thenReturn(null);
         InputStream inputStream = mock(InputStream.class);
         when(ioStreamFactory.inputStream(anyString())).thenReturn(inputStream);
         InputStreamReader inputStreamReader = mock(InputStreamReader.class);
         when(ioStreamFactory.inputStreamReader(inputStream)).thenReturn(inputStreamReader);
         String html = expectedWebsite.getHtml();
         ioUtilsMockedStatic.when(() -> IOUtils.toString(inputStreamReader)).thenReturn(html);
+        when(urlCache.replace(eq(URL), eq(html))).thenReturn(html);
         ArgumentCaptor<Website> websiteArgumentCaptor = ArgumentCaptor.forClass(Website.class);
         when(websiteRepository.save(websiteArgumentCaptor.capture())).thenAnswer(answer -> {
             Object argument = answer.getArgument(0);
@@ -83,16 +84,15 @@ class DownloadServiceTest {
             website.setId(ID);
             return website;
         });
-        when(urlCache.remove(anyString())).thenReturn(true);
 
         //when
         downloadService.onDownloadWebsite(URL);
 
         //then
-        verify(urlCache).add(URL);
+        verify(urlCache).putIfAbsent(URL, null);
+        verify(urlCache).replace(eq(URL), eq(html));
         verify(websiteRepository).save(any(Website.class));
         verify(kafkaTemplate).send(eq(KafkaTopic.NOTIFICATION.getText()), anyString());
-        verify(urlCache).remove(URL);
 
         assertEquals(expectedWebsite, websiteArgumentCaptor.getValue());
     }
@@ -101,17 +101,16 @@ class DownloadServiceTest {
     @DisplayName("Should download website when malformed URL")
     void shouldNotDownloadWebsiteWhenMalformedUrl() throws IOException {
         //given
-        when(urlCache.add(anyString())).thenReturn(true);
+        when(urlCache.putIfAbsent(eq(URL), eq(null))).thenReturn(null);
         when(ioStreamFactory.inputStream(anyString())).thenThrow(MalformedURLException.class);
-        when(urlCache.remove(anyString())).thenReturn(true);
 
         //when
         downloadService.onDownloadWebsite(URL);
 
         //then
-        verify(urlCache).add(URL);
-        verify(websiteRepository, times(0)).save(any(Website.class));
+        verify(urlCache).putIfAbsent(URL, null);
+        verify(urlCache, never()).replace(eq(URL), anyString());
+        verify(websiteRepository, never()).save(any(Website.class));
         verify(kafkaTemplate).send(eq(KafkaTopic.NOTIFICATION.getText()), anyString());
-        verify(urlCache).remove(URL);
     }
 }

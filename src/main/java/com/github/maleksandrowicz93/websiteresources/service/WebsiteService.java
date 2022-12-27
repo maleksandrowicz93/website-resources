@@ -13,7 +13,7 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 
 /**
  * This class contains business logic of {@link Website} management.
@@ -24,7 +24,7 @@ import java.util.Set;
 public class WebsiteService {
 
     private final WebsiteRepository websiteRepository;
-    private final Set<String> urlCache;
+    private final Map<String, String> urlCache;
     private final KafkaTemplate<String, String> kafkaTemplate;
 
     /**
@@ -41,7 +41,7 @@ public class WebsiteService {
             throw new InvalidUrlException();
         }
         log.info("Checking if website is already downloaded");
-        if (urlCache.contains(url) || websiteRepository.existsByUrl(url)) {
+        if (urlCache.containsKey(url) || websiteRepository.existsByUrl(url)) {
             throw new WebsiteAlreadyExistsException();
         }
         log.info("Queue download website job");

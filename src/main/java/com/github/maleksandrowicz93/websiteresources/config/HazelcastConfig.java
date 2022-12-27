@@ -4,9 +4,8 @@ import com.hazelcast.client.HazelcastClient;
 import com.hazelcast.core.HazelcastInstance;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
 
-import java.util.Set;
+import java.util.Map;
 
 /**
  * This class stores configuration of Hazelcast.
@@ -20,7 +19,7 @@ public class HazelcastConfig {
     }
 
     @Bean
-    public Set<String> urlCache(HazelcastInstance hazelcastInstance) {
-        return hazelcastInstance.getSet("urls");
+    public Map<String, String> urlCache(HazelcastInstance hazelcastInstance) {
+        return hazelcastInstance.getMap("urls");
     }
 }

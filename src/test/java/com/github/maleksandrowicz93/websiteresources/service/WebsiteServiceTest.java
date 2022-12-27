@@ -19,8 +19,8 @@ import org.springframework.kafka.core.KafkaTemplate;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -39,7 +39,7 @@ class WebsiteServiceTest {
     @MockBean
     private JpaWebsiteRepository websiteRepository;
     @MockBean
-    private Set<String> urlCache;
+    private Map<String, String> urlCache;
     @MockBean
     private KafkaTemplate<String, String> kafkaTemplate;
 
@@ -60,7 +60,7 @@ class WebsiteServiceTest {
     void shouldDownloadWebsite() throws InvalidUrlException, WebsiteAlreadyExistsException {
         //given
         mockCheckingUrlBehavior();
-        when(urlCache.contains(anyString())).thenReturn(false);
+        when(urlCache.containsKey(anyString())).thenReturn(false);
         when(websiteRepository.existsByUrl(anyString())).thenReturn(false);
 
         //when
@@ -88,8 +88,8 @@ class WebsiteServiceTest {
         assertThrows(InvalidUrlException.class, () -> websiteService.downloadWebsite(URL));
 
         //then
-        verify(urlCache, times(0)).contains(URL);
-        verify(websiteRepository, times(0)).existsByUrl(URL);
+        verify(urlCache, never()).containsKey(URL);
+        verify(websiteRepository, never()).existsByUrl(URL);
     }
 
     @Test
@@ -97,14 +97,14 @@ class WebsiteServiceTest {
     void shouldNotDownloadWebsiteWhenCacheContainsUrl() {
         //given
         mockCheckingUrlBehavior();
-        when(urlCache.contains(anyString())).thenReturn(true);
+        when(urlCache.containsKey(anyString())).thenReturn(true);
 
         //when
         assertThrows(WebsiteAlreadyExistsException.class, () -> websiteService.downloadWebsite(URL));
 
         //then
-        verify(urlCache).contains(URL);
-        verify(websiteRepository, times(0)).existsByUrl(URL);
+        verify(urlCache).containsKey(URL);
+        verify(websiteRepository, never()).existsByUrl(URL);
     }
 
     @Test
@@ -112,14 +112,14 @@ class WebsiteServiceTest {
     void shouldNotDownloadWebsiteWhenRepoContainsUrl() {
         //given
         mockCheckingUrlBehavior();
-        when(urlCache.contains(anyString())).thenReturn(false);
+        when(urlCache.containsKey(anyString())).thenReturn(false);
         when(websiteRepository.existsByUrl(anyString())).thenReturn(true);
 
         //when
         assertThrows(WebsiteAlreadyExistsException.class, () -> websiteService.downloadWebsite(URL));
 
         //then
-        verify(urlCache).contains(URL);
+        verify(urlCache).containsKey(URL);
         verify(websiteRepository).existsByUrl(URL);
     }
 
@@ -189,6 +189,6 @@ class WebsiteServiceTest {
         assertThrows(WebsiteNotFoundException.class, () -> websiteService.deleteWebsite(ID));
 
         //then
-        verify(websiteRepository, times(0)).deleteById(ID);
+        verify(websiteRepository, never()).deleteById(ID);
     }
 }
