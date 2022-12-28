@@ -96,7 +96,7 @@ class DownloadServiceTest {
         verify(temporaryUrlCache).add(URL);
         verify(websiteRepository).save(any(Website.class));
         verify(websiteCache).put(ID, HTML);
-        verify(kafkaTemplate).send(eq(KafkaTopic.NOTIFICATION.getText()), anyString());
+        verify(kafkaTemplate).send(eq(KafkaTopic.NOTIFICATION), anyString());
         verify(temporaryUrlCache).remove(URL);
 
         assertEquals(expectedWebsite, websiteArgumentCaptor.getValue());
@@ -115,7 +115,7 @@ class DownloadServiceTest {
         verify(temporaryUrlCache).add(URL);
         verify(websiteRepository, never()).save(any(Website.class));
         verify(websiteCache, never()).put(anyString(), anyString());
-        verify(kafkaTemplate).send(eq(KafkaTopic.NOTIFICATION.getText()), anyString());
+        verify(kafkaTemplate).send(eq(KafkaTopic.NOTIFICATION), anyString());
         verify(temporaryUrlCache).remove(URL);
     }
 }
