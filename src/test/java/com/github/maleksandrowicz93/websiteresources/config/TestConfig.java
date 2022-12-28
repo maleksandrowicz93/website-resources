@@ -6,7 +6,9 @@ import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 @TestConfiguration
 public class TestConfig {
@@ -16,8 +18,13 @@ public class TestConfig {
         return new MockIoStreamFactory();
     }
 
-    @Bean
-    public Map<String, String> testUrlCache() {
+    @Bean("temporaryUrlCacheForTests")
+    public Set<String> temporaryUrlCache() {
+        return new HashSet<>();
+    }
+
+    @Bean("websiteCacheForTests")
+    public Map<String, String> websiteCache() {
         return new HashMap<>();
     }
 }

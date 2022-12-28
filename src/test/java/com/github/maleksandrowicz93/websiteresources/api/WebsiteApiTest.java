@@ -17,6 +17,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 import static org.hamcrest.Matchers.hasLength;
@@ -42,12 +43,15 @@ public class WebsiteApiTest {
     @Autowired
     private WebsiteRepository websiteRepository;
     @Autowired
-    private Map<String, String> urlCache;
+    private Set<String> temporaryUrlCache;
+    @Autowired
+    private Map<String, String> websiteCache;
 
     @AfterEach
     void cleanup() {
         websiteRepository.deleteAll();
-        urlCache.forEach(urlCache::remove);
+        temporaryUrlCache.forEach(temporaryUrlCache::remove);
+        websiteCache.forEach(websiteCache::remove);
     }
 
     @Test
@@ -93,7 +97,7 @@ public class WebsiteApiTest {
     @DisplayName("Should not download website when is being downloaded")
     void shouldNotDownloadWebsiteWhenIsBeingDownloaded() throws Exception {
         ErrorCode errorCode = ErrorCode.WEBSITE_ALREADY_EXISTS;
-        urlCache.put(URL, HTML);
+        websiteCache.put(URL, HTML);
         ResultActions resultActions = mockMvc.perform(post(BASE_PATH)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(URL))

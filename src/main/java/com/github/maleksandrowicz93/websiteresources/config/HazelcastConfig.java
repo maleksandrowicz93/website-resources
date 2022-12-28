@@ -4,12 +4,16 @@ import com.hazelcast.client.HazelcastClient;
 import com.hazelcast.core.HazelcastInstance;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 
 import java.util.Map;
+import java.util.Set;
+
 
 /**
  * This class stores configuration of Hazelcast.
  */
+@Primary
 @Configuration
 public class HazelcastConfig {
 
@@ -19,7 +23,12 @@ public class HazelcastConfig {
     }
 
     @Bean
-    public Map<String, String> urlCache(HazelcastInstance hazelcastInstance) {
-        return hazelcastInstance.getMap("urls");
+    public Set<String> temporaryUrlCache(HazelcastInstance hazelcastInstance) {
+        return hazelcastInstance.getSet(Caches.URLS);
+    }
+
+    @Bean
+    public Map<String, String> websiteCache(HazelcastInstance hazelcastInstance) {
+        return hazelcastInstance.getMap(Caches.WEBSITES);
     }
 }

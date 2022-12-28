@@ -17,10 +17,7 @@ import org.mockito.MockedStatic;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.kafka.core.KafkaTemplate;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -39,7 +36,9 @@ class WebsiteServiceTest {
     @MockBean
     private JpaWebsiteRepository websiteRepository;
     @MockBean
-    private Map<String, String> urlCache;
+    private Set<String> temporaryUrlCache;
+    @MockBean
+    private Map<String, String> websiteCache;
     @MockBean
     private KafkaTemplate<String, String> kafkaTemplate;
 
@@ -47,7 +46,7 @@ class WebsiteServiceTest {
 
     @BeforeEach
     void setup() {
-        websiteService = new WebsiteService(websiteRepository, urlCache, kafkaTemplate);
+        websiteService = new WebsiteService(websiteRepository, temporaryUrlCache, websiteCache, kafkaTemplate);
     }
 
     @AfterEach
@@ -60,7 +59,8 @@ class WebsiteServiceTest {
     void shouldDownloadWebsite() throws InvalidUrlException, WebsiteAlreadyExistsException {
         //given
         mockCheckingUrlBehavior();
-        when(urlCache.containsKey(anyString())).thenReturn(false);
+        when(temporaryUrlCache.contains(anyString())).thenReturn(false);
+        when(websiteCache.containsKey(anyString())).thenReturn(false);
         when(websiteRepository.existsByUrl(anyString())).thenReturn(false);
 
         //when
@@ -88,23 +88,44 @@ class WebsiteServiceTest {
         assertThrows(InvalidUrlException.class, () -> websiteService.downloadWebsite(URL));
 
         //then
-        verify(urlCache, never()).containsKey(URL);
+        verify(temporaryUrlCache, never()).contains(URL);
+        verify(websiteCache, never()).containsKey(URL);
         verify(websiteRepository, never()).existsByUrl(URL);
-    }
+        verify(kafkaTemplate, never()).send(anyString(), anyString());    }
 
     @Test
     @DisplayName("Should not download website when cache contains URL")
     void shouldNotDownloadWebsiteWhenCacheContainsUrl() {
         //given
         mockCheckingUrlBehavior();
-        when(urlCache.containsKey(anyString())).thenReturn(true);
+        when(temporaryUrlCache.contains(anyString())).thenReturn(true);
 
         //when
         assertThrows(WebsiteAlreadyExistsException.class, () -> websiteService.downloadWebsite(URL));
 
         //then
-        verify(urlCache).containsKey(URL);
+        verify(temporaryUrlCache).contains(URL);
+        verify(websiteCache, never()).containsKey(URL);
         verify(websiteRepository, never()).existsByUrl(URL);
+        verify(kafkaTemplate, never()).send(anyString(), anyString());
+    }
+
+    @Test
+    @DisplayName("Should not download website when repo contains URL")
+    void shouldNotDownloadWebsiteWhenCacheContainsWebsite() {
+        //given
+        mockCheckingUrlBehavior();
+        when(temporaryUrlCache.contains(anyString())).thenReturn(false);
+        when(websiteCache.containsKey(anyString())).thenReturn(true);
+
+        //when
+        assertThrows(WebsiteAlreadyExistsException.class, () -> websiteService.downloadWebsite(URL));
+
+        //then
+        verify(temporaryUrlCache).contains(URL);
+        verify(websiteCache).containsKey(URL);
+        verify(websiteRepository, never()).existsByUrl(URL);
+        verify(kafkaTemplate, never()).send(anyString(), anyString());
     }
 
     @Test
@@ -112,15 +133,18 @@ class WebsiteServiceTest {
     void shouldNotDownloadWebsiteWhenRepoContainsUrl() {
         //given
         mockCheckingUrlBehavior();
-        when(urlCache.containsKey(anyString())).thenReturn(false);
+        when(temporaryUrlCache.contains(anyString())).thenReturn(false);
+        when(websiteCache.containsKey(anyString())).thenReturn(false);
         when(websiteRepository.existsByUrl(anyString())).thenReturn(true);
 
         //when
         assertThrows(WebsiteAlreadyExistsException.class, () -> websiteService.downloadWebsite(URL));
 
         //then
-        verify(urlCache).containsKey(URL);
+        verify(temporaryUrlCache).contains(URL);
+        verify(websiteCache).containsKey(URL);
         verify(websiteRepository).existsByUrl(URL);
+        verify(kafkaTemplate, never()).send(anyString(), anyString());
     }
 
     @Test

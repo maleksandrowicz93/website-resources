@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * This class contains business logic of {@link Website} management.
@@ -24,7 +25,8 @@ import java.util.Map;
 public class WebsiteService {
 
     private final WebsiteRepository websiteRepository;
-    private final Map<String, String> urlCache;
+    private final Set<String> temporaryUrlCache;
+    private final Map<String, String> websiteCache;
     private final KafkaTemplate<String, String> kafkaTemplate;
 
     /**
@@ -41,7 +43,8 @@ public class WebsiteService {
             throw new InvalidUrlException();
         }
         log.info("Checking if website is already downloaded");
-        if (urlCache.containsKey(url) || websiteRepository.existsByUrl(url)) {
+        boolean isUrlCached = temporaryUrlCache.contains(url) || websiteCache.containsKey(url);
+        if (isUrlCached || websiteRepository.existsByUrl(url)) {
             throw new WebsiteAlreadyExistsException();
         }
         log.info("Queue download website job");
