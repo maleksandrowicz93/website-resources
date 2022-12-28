@@ -1,21 +1,23 @@
 package com.github.maleksandrowicz93.websiteresources.config;
 
-import com.github.maleksandrowicz93.websiteresources.utils.IoStreamFactory;
-import com.github.maleksandrowicz93.websiteresources.utils.MockIoStreamFactory;
+import com.github.maleksandrowicz93.websiteresources.utils.IOStreamFactory;
+import com.github.maleksandrowicz93.websiteresources.utils.MockIOStreamFactory;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Primary;
 
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+@Primary
 @TestConfiguration
 public class TestConfig {
 
     @Bean
-    public IoStreamFactory<String> ioStreamFactory() {
-        return new MockIoStreamFactory();
+    public IOStreamFactory<String> ioStreamFactory() {
+        return new MockIOStreamFactory();
     }
 
     @Bean("temporaryUrlCacheForTests")

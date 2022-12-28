@@ -1,6 +1,6 @@
 package com.github.maleksandrowicz93.websiteresources.service;
 
-import com.github.maleksandrowicz93.websiteresources.enums.KafkaTopic;
+import com.github.maleksandrowicz93.websiteresources.config.KafkaTopic;
 import com.github.maleksandrowicz93.websiteresources.exception.InvalidUrlException;
 import com.github.maleksandrowicz93.websiteresources.exception.WebsiteAlreadyExistsException;
 import com.github.maleksandrowicz93.websiteresources.exception.WebsiteNotFoundException;
@@ -48,7 +48,7 @@ public class WebsiteService {
             throw new WebsiteAlreadyExistsException();
         }
         log.info("Queue download website job");
-        kafkaTemplate.send(KafkaTopic.DOWNLOAD_WEBSITE.getText(), url);
+        kafkaTemplate.send(KafkaTopic.DOWNLOAD_WEBSITE, url);
     }
 
     /**

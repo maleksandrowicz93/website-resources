@@ -1,6 +1,5 @@
 package com.github.maleksandrowicz93.websiteresources.config;
 
-import com.github.maleksandrowicz93.websiteresources.enums.KafkaTopic;
 import org.apache.kafka.clients.admin.AdminClientConfig;
 import org.apache.kafka.clients.admin.NewTopic;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,6 +28,6 @@ public class KafkaTopicConfig {
 
     @Bean
     public NewTopic downloadWebsiteTopic() {
-        return new NewTopic(KafkaTopic.DOWNLOAD_WEBSITE.getText(), 1, (short) 1);
+        return new NewTopic(KafkaTopic.DOWNLOAD_WEBSITE, 1, (short) 1);
     }
 }

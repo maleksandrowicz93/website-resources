@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-public class MockIoStreamFactory implements IoStreamFactory<String> {
+public class MockIOStreamFactory implements IOStreamFactory<String> {
 
     @Override
     public InputStream inputStream(String url) throws IOException {

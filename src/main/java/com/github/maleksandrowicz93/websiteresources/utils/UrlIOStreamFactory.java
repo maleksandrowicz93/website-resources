@@ -11,7 +11,7 @@ import java.net.URL;
  * This class provides {@link InputStream} instances.
  */
 @Component
-public class UrlIoStreamFactory implements IoStreamFactory<String> {
+public class UrlIOStreamFactory implements IOStreamFactory<String> {
 
     /**
      * This method provides {@link InputStream} instance from String url.

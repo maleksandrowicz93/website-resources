@@ -1,10 +1,10 @@
 package com.github.maleksandrowicz93.websiteresources.service;
 
 import com.github.maleksandrowicz93.websiteresources.annotation.EmbeddedKafkaTest;
-import com.github.maleksandrowicz93.websiteresources.enums.KafkaTopic;
+import com.github.maleksandrowicz93.websiteresources.config.KafkaTopic;
 import com.github.maleksandrowicz93.websiteresources.model.Website;
 import com.github.maleksandrowicz93.websiteresources.repository.jpa.JpaWebsiteRepository;
-import com.github.maleksandrowicz93.websiteresources.utils.UrlIoStreamFactory;
+import com.github.maleksandrowicz93.websiteresources.utils.UrlIOStreamFactory;
 import com.github.maleksandrowicz93.websiteresources.utils.WebsiteTestUtils;
 import com.google.gson.Gson;
 import org.apache.commons.io.IOUtils;
@@ -49,7 +49,7 @@ class DownloadServiceTest {
     @MockBean
     private Map<String, String> websiteCache;
     @MockBean
-    private UrlIoStreamFactory ioStreamFactory;
+    private UrlIOStreamFactory ioStreamFactory;
     @MockBean
     private KafkaTemplate<String, String> kafkaTemplate;
     @SpyBean

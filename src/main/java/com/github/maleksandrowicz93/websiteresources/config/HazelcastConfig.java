@@ -1,10 +1,10 @@
 package com.github.maleksandrowicz93.websiteresources.config;
 
+import com.github.maleksandrowicz93.websiteresources.enums.Caches;
 import com.hazelcast.client.HazelcastClient;
 import com.hazelcast.core.HazelcastInstance;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
 
 import java.util.Map;
 import java.util.Set;
@@ -13,7 +13,6 @@ import java.util.Set;
 /**
  * This class stores configuration of Hazelcast.
  */
-@Primary
 @Configuration
 public class HazelcastConfig {
 
@@ -24,11 +23,11 @@ public class HazelcastConfig {
 
     @Bean
     public Set<String> temporaryUrlCache(HazelcastInstance hazelcastInstance) {
-        return hazelcastInstance.getSet(Caches.URLS);
+        return hazelcastInstance.getSet(Caches.URLS.getText());
     }
 
     @Bean
     public Map<String, String> websiteCache(HazelcastInstance hazelcastInstance) {
-        return hazelcastInstance.getMap(Caches.WEBSITES);
+        return hazelcastInstance.getMap(Caches.WEBSITES.getText());
     }
 }

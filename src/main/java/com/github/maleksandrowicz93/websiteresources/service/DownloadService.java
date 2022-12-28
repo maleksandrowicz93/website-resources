@@ -3,11 +3,11 @@ package com.github.maleksandrowicz93.websiteresources.service;
 import com.github.maleksandrowicz93.websiteresources.dto.ErrorResponseDto;
 import com.github.maleksandrowicz93.websiteresources.dto.ResponseDto;
 import com.github.maleksandrowicz93.websiteresources.enums.ErrorCode;
-import com.github.maleksandrowicz93.websiteresources.enums.KafkaTopic;
+import com.github.maleksandrowicz93.websiteresources.config.KafkaTopic;
 import com.github.maleksandrowicz93.websiteresources.enums.ResponseMessage;
 import com.github.maleksandrowicz93.websiteresources.model.Website;
 import com.github.maleksandrowicz93.websiteresources.repository.generic.WebsiteRepository;
-import com.github.maleksandrowicz93.websiteresources.utils.IoStreamFactory;
+import com.github.maleksandrowicz93.websiteresources.utils.IOStreamFactory;
 import com.github.maleksandrowicz93.websiteresources.utils.ResponseFactory;
 import com.google.gson.Gson;
 import lombok.RequiredArgsConstructor;
@@ -35,21 +35,20 @@ public class DownloadService {
     private final WebsiteRepository websiteRepository;
     private final Set<String> temporaryUrlCache;
     private final Map<String, String> websiteCache;
-    private final IoStreamFactory<String> ioStreamFactory;
+    private final IOStreamFactory<String> ioStreamFactory;
     private final KafkaTemplate<String, String> kafkaTemplate;
     private final Gson gson;
 
     /**
-     * This method asynchronously download website from given url.
+     * This method asynchronously download website from given url.`r
      * @param url - String url of website to be downloaded
      */
-    @KafkaListener(topics = "download-website", groupId = "website-resources")
+    @KafkaListener(topics = KafkaTopic.DOWNLOAD_WEBSITE, groupId = "website-resources")
     public void onDownloadWebsite(String url) {
         log.info("Retrieved download website job for url: {}", url);
         log.info("Adding url: {} into temporary cache", url);
         temporaryUrlCache.add(url);
         log.info("Downloading html code from url");
-        String topic = KafkaTopic.NOTIFICATION.getText();
         try (InputStream inputStream = ioStreamFactory.inputStream(url)) {
             InputStreamReader inputStreamReader = ioStreamFactory.inputStreamReader(inputStream);
             String html = IOUtils.toString(inputStreamReader);
@@ -65,14 +64,14 @@ public class DownloadService {
             ResponseMessage responseMessage = ResponseMessage.WEBSITE_DOWNLOADED_SUCCESSFULLY;
             ResponseDto responseDto = ResponseFactory.responseDto(responseMessage);
             String json = gson.toJson(responseDto);
-            kafkaTemplate.send(topic, json);
+            kafkaTemplate.send(KafkaTopic.NOTIFICATION, json);
         } catch (IOException e) {
             UUID uuid = UUID.randomUUID();
             log.error("Error with UUID {}: {}", uuid, e.getMessage());
             ErrorCode errorCode = ErrorCode.WEBSITE_DOWNLOADING_FAILED;
             ErrorResponseDto errorResponseDto = ResponseFactory.errorResponseDto(errorCode, uuid);
             String json = gson.toJson(errorResponseDto);
-            kafkaTemplate.send(topic, json);
+            kafkaTemplate.send(KafkaTopic.NOTIFICATION, json);
         } finally {
             log.info("Removing url: {} from temporary url cache", url);
             temporaryUrlCache.remove(url);

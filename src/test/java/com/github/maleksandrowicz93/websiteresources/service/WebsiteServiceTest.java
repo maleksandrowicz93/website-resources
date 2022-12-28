@@ -1,7 +1,7 @@
 package com.github.maleksandrowicz93.websiteresources.service;
 
 import com.github.maleksandrowicz93.websiteresources.annotation.EmbeddedKafkaTest;
-import com.github.maleksandrowicz93.websiteresources.enums.KafkaTopic;
+import com.github.maleksandrowicz93.websiteresources.config.KafkaTopic;
 import com.github.maleksandrowicz93.websiteresources.exception.InvalidUrlException;
 import com.github.maleksandrowicz93.websiteresources.exception.WebsiteAlreadyExistsException;
 import com.github.maleksandrowicz93.websiteresources.exception.WebsiteNotFoundException;
@@ -67,7 +67,7 @@ class WebsiteServiceTest {
         websiteService.downloadWebsite(URL);
 
         //then
-        verify(kafkaTemplate).send(KafkaTopic.DOWNLOAD_WEBSITE.getText(), URL);
+        verify(kafkaTemplate).send(KafkaTopic.DOWNLOAD_WEBSITE, URL);
     }
 
     private void mockCheckingUrlBehavior() {
